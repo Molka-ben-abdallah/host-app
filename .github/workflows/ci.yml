@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20  # Use Node.js 20 LTS for stability
+
+      - name: Install Backend Dependencies
+        run: |
+          cd server
+          npm install
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd client
+          npm install
+
+      - name: Run Backend Tests
+        run: |
+          cd server
+          npm test  # Run backend tests
+
+      - name: Run Frontend Tests
+        run: |
+          cd client
+          npm test  # Run frontend tests (if defined)
