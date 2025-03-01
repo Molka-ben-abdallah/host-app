@@ -13,31 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      
+    name: Checkout Code
+    uses: actions/checkout@v3
 
-      - name: Set Up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: v22.13.1  # Use Node.js 20 LTS for stability
+      
+    name: Set Up Node.js
+    uses: actions/setup-node@v3
+    with:
+        node-version: 22  # Use Node.js 20 LTS for stability
 
-      - name: Install Backend Dependencies
-        run: |
-          cd server
-          chmod +x node_modules/.bin/jest
-          npm install
+      
+    name: Install Dependencies (Backend + Frontend)
+    run: npm install
 
-      - name: Install Frontend Dependencies
-        run: |
-          cd client
-          npm install
-
-      - name: Run Backend Tests
-        run: |
-          cd server
-          npm test  # Run backend tests
-
-      - name: Run Frontend Tests
-        run: |
-          cd client
-          npm test  # Run frontend tests (if defined)
+      
+    name: Run Tests (Backend + Frontend Together)
+    run: npm test
