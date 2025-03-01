@@ -3,15 +3,14 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - master  # Use 'master' since you have only one branch
+      - master
   pull_request:
     branches:
       - master
 
 jobs:
-  build-test:
+  build-server:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -19,20 +18,42 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22  # Use Node.js 20 LTS if needed
+          node-version: 22  
 
-      - name: Install Dependencies (Backend + Frontend)
-        run: npm install
+      - name: Install Server Dependencies
+        run: |
+          cd server
+          npm install
+      - name: Ensure Jest is Installed
+        run: npm install --save-dev jest
+  
+      - name: Run Server Tests
+        run: |
+          cd server
+          npm test
+   
+      - name: Fix Jest Permissions
+        run: chmod +x node_modules/.bin/jest
+  
+  build-client:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Run Backend Tests
-        run: npm test  # Runs Jest tests for Express backend
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22  
 
-      - name: Install Frontend Dependencies
+      - name: Install Client Dependencies
         run: |
           cd client
           npm install
 
-      - name: Run Frontend Tests
+      - name: Run Client Tests
         run: |
           cd client
-          npm test  # Runs React Testing Library tests
+          npm test
+
+  
