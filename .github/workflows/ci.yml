@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - master  # Use 'master' since you have only one branch
   pull_request:
     branches:
       - master
@@ -20,7 +19,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20  # Use Node.js 20 LTS for stability
+          node-version: 22  
 
       - name: Install Backend Dependencies
         run: |
