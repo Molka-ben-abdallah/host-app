@@ -19,15 +19,25 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20  # Use LTS for stability
+          node-version: v22.13.1  # Use Node.js 20 LTS for stability
 
-      - name: Install Dependencies (Backend + Frontend)
-        run: npm ci  # Install dependencies from the root package.json
+      - name: Install Backend Dependencies
+        run: |
+          cd server
+          chmod +x node_modules/.bin/jest
+          npm install
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd client
+          npm install
 
       - name: Run Backend Tests
-        run: npm test --prefix server  # Run backend tests
+        run: |
+          cd server
+          npm test  # Run backend tests
 
       - name: Run Frontend Tests
         run: |
           cd client
-          npm test
+          npm test  # Run frontend tests (if defined)
