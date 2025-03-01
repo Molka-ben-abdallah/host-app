@@ -3,6 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
+      - master
       - master  # Use 'master' since you have only one branch
   pull_request:
     branches:
@@ -19,20 +20,24 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22  # Use Node.js 20 LTS if needed
+          node-version: 20  # Use Node.js 20 LTS for stability
 
-      - name: Install Dependencies (Backend + Frontend)
-        run: npm install
-
-      - name: Run Backend Tests
-        run: npm test  # Runs Jest tests for Express backend
+      - name: Install Backend Dependencies
+        run: |
+          cd server
+          npm install
 
       - name: Install Frontend Dependencies
         run: |
           cd client
           npm install
 
+      - name: Run Backend Tests
+        run: |
+          cd server
+          npm test  # Run backend tests
+
       - name: Run Frontend Tests
         run: |
           cd client
-          npm test  # Runs React Testing Library tests
+          npm test  # Run frontend tests (if defined)
