@@ -40,13 +40,3 @@ jobs:
         run: |
           cd client
           npm test  # Run frontend tests (if defined)
-
-deploy:
-  needs: build
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Deploy to production
-      run: echo "Deploying to production..."
