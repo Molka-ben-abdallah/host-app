@@ -19,7 +19,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22  # Use Node.js 20 LTS for stability
+          node-version: v22.13.1  # Use Node.js 20 LTS for stability
 
       - name: Install Backend Dependencies
         run: |
@@ -40,3 +40,13 @@ jobs:
         run: |
           cd client
           npm test  # Run frontend tests (if defined)
+
+deploy:
+  needs: build
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to production
+      run: echo "Deploying to production..."
