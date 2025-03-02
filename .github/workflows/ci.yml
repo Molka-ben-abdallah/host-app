@@ -65,7 +65,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v18
         with:
-          node-version: 18  
+          node-version: 22  
 
       - name: Install Dependencies & Build
         run: |
@@ -87,7 +87,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v18
         with:
-          node-version: 18  
+          node-version: 22  
 
       - name: Install Dependencies & Build
         run: |
