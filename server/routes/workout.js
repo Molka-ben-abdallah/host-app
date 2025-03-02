@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 //import controllers
-const {getTest} = require('../controllers/test');
+const {getTest} = require('../controllers/workout');
 
 // import middlewares
 

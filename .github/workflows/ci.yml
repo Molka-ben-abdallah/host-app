@@ -56,4 +56,47 @@ jobs:
           cd client
           npm test
 
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v18
+        with:
+          node-version: 18  
+
+      - name: Install Dependencies & Build
+        run: |
+          cd server
+          npm install
+          npm run build
+
+      - name: Deploy to Render
+        run: curl "$RENDER_DEPLOY_HOOK"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v18
+        with:
+          node-version: 18  
+
+      - name: Install Dependencies & Build
+        run: |
+          cd client
+          npm install
+          npm run build
+
+      - name: Deploy to Vercel
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
   
+
+

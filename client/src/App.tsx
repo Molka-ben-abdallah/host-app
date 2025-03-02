@@ -1,8 +1,7 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from 'react';
-import { getTest } from './functions/test';
+import { getTest } from './functions/workout';
 
 function App() {
   const [data, setData] = useState("Hello world");

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
-
+const cors = require("cors"); app.use(cors({ origin: "*" })); 
 // app
 const app = express();
 
@@ -18,7 +18,7 @@ app.use(morgan("dev"));
 app.use(cors({origin: true, credentials: true}));
 
 //routes
-const testRoutes = require('./routes/test');
+const testRoutes = require('./routes/workout');
 app.use("/",testRoutes);
 
 //port 
