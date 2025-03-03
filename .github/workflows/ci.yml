@@ -71,7 +71,6 @@ jobs:
         run: |
           cd server
           npm install
-          npm run build
 
       - name: Deploy to Render
         run: curl "$RENDER_DEPLOY_HOOK"
