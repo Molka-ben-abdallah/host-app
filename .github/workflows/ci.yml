@@ -93,6 +93,9 @@ jobs:
           cd client
           npm install
           npm run build
+      
+      - name: Install Vercel CLI
+        run: npm install -g vercel
 
       - name: Deploy to Vercel
         run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
