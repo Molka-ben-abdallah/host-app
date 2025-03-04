@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { useState, useEffect } from 'react';
-import { getTest } from './functions/workout';
+import { getTest } from './functions/apiTest';
 
 function App() {
   const [data, setData] = useState("Hello world");

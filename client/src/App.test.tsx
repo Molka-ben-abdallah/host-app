@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import App from './App';
-import { getTest } from './functions/workout';
+import { getTest } from './functions/apiTest';
 
 // Mock the getTest function
 jest.mock('./functions/workout', () => ({
