@@ -4,7 +4,7 @@ import App from './App';
 import { getTest } from './functions/apiTest';
 
 // Mock the getTest function
-jest.mock('./functions/workout', () => ({
+jest.mock('./functions/apiTest', () => ({
   getTest: jest.fn(),
 }));
 
