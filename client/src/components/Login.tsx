@@ -76,17 +76,15 @@ const Login = () => {
             onClick={() => handleSocialSignIn(googleProvider)}
             className="google-button"
           >
-            Sign in with Google
+            login with Google
           </button>
           <button
             onClick={() => handleSocialSignIn(facebookProvider)}
             className="facebook-button"
           >
-            Sign in with Facebook
+            login with Facebook
           </button>
         </div>
-
-      
       </div>
     </div>
   );

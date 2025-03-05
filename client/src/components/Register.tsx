@@ -33,7 +33,7 @@ const Register = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/login"); // Redirect to the login page after successful registration
+      navigate("/profile"); // Redirect to the login page after successful registration
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message); // Set the error message if registration fails
