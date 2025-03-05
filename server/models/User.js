@@ -54,8 +54,8 @@ const UserSchema = new mongoose.Schema({
   status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
 },{timestamps: true});
 
-UserSchema.index({ first_name: 1, last_name: 1 });  // Compound index for faster lookup on first_name + last_name
-UserSchema.index({ "location.city": 1, "location.country": 1 });  // Compound index for city + country in location
+UserSchema.index({ first_name: 1, last_name: 1 });  
+UserSchema.index({ "location.city": 1, "location.country": 1 }); 
 UserSchema.index({status: 1 , createdAt: -1});
 
 const User = mongoose.model("User", UserSchema);
