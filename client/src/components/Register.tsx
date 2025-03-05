@@ -14,6 +14,18 @@ const Register = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // Handle authentication with Google or Facebook
+  const handleSocialSignIn = async (provider: any) => {
+    try {
+      await signInWithPopup(auth, provider);
+      navigate("/profile"); // Redirect to the profile/dashboard after successful registration
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message); // Set the error message if registration fails
+      }
+    }
+  };
+
   // Email/Password Registration
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,34 +33,10 @@ const Register = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/login");
+      navigate("/login"); // Redirect to the login page after successful registration
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
-      }
-    }
-  };
-
-  // Google Authentication
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      navigate("/dashboard");
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
-    }
-  };
-
-  // Facebook Authentication
-  const handleFacebookSignIn = async () => {
-    try {
-      await signInWithPopup(auth, facebookProvider);
-      navigate("/dashboard");
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
+        setError(err.message); // Set the error message if registration fails
       }
     }
   };
@@ -58,6 +46,8 @@ const Register = () => {
       <div className="card">
         <h2>Register</h2>
         {error && <p className="error-message">{error}</p>}
+
+        {/* Email/Password Registration Form */}
         <form onSubmit={handleRegister}>
           <input
             type="email"
@@ -75,11 +65,25 @@ const Register = () => {
           />
           <button type="submit">Register</button>
         </form>
-
+        <p>
+          <a href="/login" className="link-style">
+            Already have an account?
+          </a>
+        </p>
         <h3>Or Register with:</h3>
         <div className="social-buttons">
-          <button onClick={handleGoogleSignIn}>Sign in with Google</button>
-          <button onClick={handleFacebookSignIn}>Sign in with Facebook</button>
+          <button
+            onClick={() => handleSocialSignIn(googleProvider)}
+            className="google-button"
+          >
+            Register with Google
+          </button>
+          <button
+            onClick={() => handleSocialSignIn(facebookProvider)}
+            className="facebook-button"
+          >
+            Register with Facebook
+          </button>
         </div>
       </div>
     </div>

@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebaseConfig";
-import "../App.css";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  auth,
+  googleProvider,
+  facebookProvider,
+} from "../config/firebaseConfig";
+import "../App.css"; // Importing styles
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,16 +14,29 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleRegister = async (e: React.FormEvent) => {
+  // Email/Password Login
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/profile");
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/profile"); // Redirect to the dashboard after successful login
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setError(err.message); // Set the error message if login fails
+      }
+    }
+  };
+
+  // Handle authentication with Google or Facebook
+  const handleSocialSignIn = async (provider: any) => {
+    try {
+      await signInWithPopup(auth, provider);
+      navigate("/profile"); // Redirect to the dashboard after successful login
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message); // Set the error message if login fails
       }
     }
   };
@@ -29,7 +46,9 @@ const Login = () => {
       <div className="card">
         <h2>Login</h2>
         {error && <p className="error-message">{error}</p>}
-        <form onSubmit={handleRegister}>
+
+        {/* Email/Password Login Form */}
+        <form onSubmit={handleEmailLogin}>
           <input
             type="email"
             placeholder="Email"
@@ -46,6 +65,28 @@ const Login = () => {
           />
           <button type="submit">Login</button>
         </form>
+        <p>
+          <a href="/register" className="link-style">
+            Create account?
+          </a>
+        </p>
+        <h3>Or Login with:</h3>
+        <div className="social-buttons">
+          <button
+            onClick={() => handleSocialSignIn(googleProvider)}
+            className="google-button"
+          >
+            Sign in with Google
+          </button>
+          <button
+            onClick={() => handleSocialSignIn(facebookProvider)}
+            className="facebook-button"
+          >
+            Sign in with Facebook
+          </button>
+        </div>
+
+      
       </div>
     </div>
   );
