@@ -20,7 +20,18 @@ const Login = () => {
     setError("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Check if the email is verified
+      if (!userCredential.user.emailVerified) {
+        setError("Please verify your email before logging in.");
+        return;
+      }
+
       navigate("/profile"); // Redirect to the dashboard after successful login
     } catch (err) {
       if (err instanceof Error) {
@@ -65,26 +76,28 @@ const Login = () => {
           />
           <button type="submit">Login</button>
         </form>
-        <p>
-          <a href="/register" className="link-style">
-            Create account?
-          </a>
-        </p>
+
         <h3>Or Login with:</h3>
         <div className="social-buttons">
           <button
             onClick={() => handleSocialSignIn(googleProvider)}
             className="google-button"
           >
-            login with Google
+            Sign in with Google
           </button>
           <button
             onClick={() => handleSocialSignIn(facebookProvider)}
             className="facebook-button"
           >
-            login with Facebook
+            Sign in with Facebook
           </button>
         </div>
+
+        <p>
+          <a href="/register" className="link-style">
+            Create an account?
+          </a>
+        </p>
       </div>
     </div>
   );

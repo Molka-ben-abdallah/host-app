@@ -1,25 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../config/firebaseConfig"; // Firebase config import
+import { auth } from "../config/firebaseConfig";
 
 const Profile = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth); // Sign out the user
-      navigate("/login"); // Redirect to the login page after logout
-    } catch (err) {
-      console.error("Error signing out: ", err);
-    }
+    await signOut(auth);
+    navigate("/login"); // Redirect to the login page after logging out
   };
 
   return (
     <div className="App">
       <div className="card">
-        <h2>Welcome to Your Profile</h2>
-        <p>You're logged in as {auth.currentUser?.email}</p>
+        <h2>Profile</h2>
+        <p>Welcome to your profile!</p>
         <button onClick={handleLogout}>Logout</button>
       </div>
     </div>
