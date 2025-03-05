@@ -1,19 +1,18 @@
-import React from 'react';
-import './App.css';
-import { useState, useEffect } from 'react';
-import { getTest } from './functions/apiTest';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Register from "./components/Register"; // Import the Register component
+import Login from "./components/Login"; // Import the Login component
+import Logout from "./components/Logout"; // Import the Logout component
 
 function App() {
-  const [data, setData] = useState("Hello world");
-  useEffect(() => {
-    getTest().then((res)=> {
-      setData(res.message);
-    }).catch((err)=> console.log(err));
-  }, []);
   return (
-    <div className="App">
-     <h1>{data}</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+      </Routes>
+    </Router>
   );
 }
 
