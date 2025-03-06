@@ -5,7 +5,7 @@ import {
   auth,
   googleProvider,
   facebookProvider,
-} from "../config/firebaseConfig";
+} from "../../config/firebaseConfig";
 import "../App.css"; // Importing styles
 
 const Login = () => {
