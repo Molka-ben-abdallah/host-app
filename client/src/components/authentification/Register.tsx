@@ -10,8 +10,8 @@ import {
   auth,
   googleProvider,
   facebookProvider,
-} from "../config/firebaseConfig";
-import "../App.css"; // Importing styles
+} from "../../config/firebaseConfig";
+import "../../App.css"; // Importing styles
 
 const Register = () => {
   const [email, setEmail] = useState("");
