@@ -1,10 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from "./components/Register"; // Import the Register component
-import Login from "./components/Login"; // Import the Login component
-import Logout from "./components/Logout"; // Import the Logout component
-import Profile from "./components/Profile"; // Import the Profile component
-
+import Register from "./components/Register";
+import Login from "./components/Login";
+import Logout from "./components/Logout";
+import Profile from "./components/Profile";
 function App() {
   return (
     <Router>
