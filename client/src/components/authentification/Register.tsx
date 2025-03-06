@@ -11,7 +11,7 @@ import {
   googleProvider,
   facebookProvider,
 } from "../../config/firebaseConfig";
-import "../App.css"; // Importing styles
+import "../../App.css"; // Importing styles
 
 const Register = () => {
   const [email, setEmail] = useState("");
