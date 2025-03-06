@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
   firebaseUID: { type: String, required: true, unique: true },
-  password : {type :String , required : true},
+  password : {type: String , required: true},
+  
   first_name: { type: String, minlength: 3, maxlength: 20},
   last_name: { type: String, minlength: 3, maxlength: 50},
   birthday: { type: Date,
@@ -51,11 +52,10 @@ const UserSchema = new mongoose.Schema({
   },
   role: { type: String, enum: ["user", "host"], default: "user" , index: true},
   status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
-  createdAt: { type: Date, default: Date.now }
-});
+},{timestamps: true});
 
-UserSchema.index({ first_name: 1, last_name: 1 });  // Compound index for faster lookup on first_name + last_name
-UserSchema.index({ "location.city": 1, "location.country": 1 });  // Compound index for city + country in location
+UserSchema.index({ first_name: 1, last_name: 1 });  
+UserSchema.index({ "location.city": 1, "location.country": 1 }); 
 UserSchema.index({status: 1 , createdAt: -1});
 
 const User = mongoose.model("User", UserSchema);

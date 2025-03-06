@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
-console.log("🔍 MONGO_URI:", process.env.MONGO_URI);
+
 //const cors = require("cors"); app.use(cors({ origin: "*" }));
 // app
 const app = express();
@@ -19,10 +19,9 @@ app.use(morgan("dev"));
 app.use(cors({ origin: true, credentials: true }));
 
 //routes
-const testRoutes = require("./routes/apiTest");
-app.use("/", testRoutes);
 
-//port
+app.use("/api/auth",authRoutes);
+//port 
 const port = process.env.PORT || 5000;
 
 //listener

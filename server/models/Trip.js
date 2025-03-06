@@ -54,8 +54,7 @@ const TripSchema = new mongoose.Schema({
     agrees_to_term : { type: Boolean, default: false }
   },
   status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending", index : true },
-  createdAt: { type: Date, default: Date.now , index: true}
-});
+},{timestamps: true});
 
 TripSchema.index({ hostId: 1, createdAt: -1 }); // Filter by host and sort by newest
 TripSchema.index({ theme: 1, availability: 1 }); // Filter by theme and date

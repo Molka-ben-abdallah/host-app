@@ -2,7 +2,7 @@ const express = require('express');
 const admin = require('../firebase');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const verifyToken = require('../middlewares/verifyToken');
+const verifyToken = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 // Route to register a new user
