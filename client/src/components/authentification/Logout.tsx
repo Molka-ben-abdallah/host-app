@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../App.css"; // Import the App.css file
+import "../../App.css"; // Importing styles
 import { Navigate } from "react-router-dom";
 
 const Logout = () => {

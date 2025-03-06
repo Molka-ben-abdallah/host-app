@@ -5,8 +5,8 @@ import {
   auth,
   googleProvider,
   facebookProvider,
-} from "../config/firebaseConfig";
-import "../App.css"; // Importing styles
+} from "../../config/firebaseConfig";
+import "../../App.css"; // Importing styles
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -94,7 +94,7 @@ const Login = () => {
         </div>
 
         <p>
-          <a href="/register" className="link-style">
+          <a href="/" className="link-style">
             Create an account?
           </a>
         </p>
