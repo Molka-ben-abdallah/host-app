@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const TripSchema = new mongoose.Schema({
-  hostId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
-  theme: { type: String, required: true, index: true },
-  title: { type: String, required: true, minlength: 5, maxlength: 40, index : true },
-  description: { type: String, required: true, minlength: 10, maxlength: 300 },
+  hostId: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
+  theme: { type: String, index: true },
+  title: { type: String, minlength: 5, maxlength: 40, index : true },
+  description: { type: String, minlength: 10, maxlength: 300 },
   duration : {type : String , required : true},
   provision :{
     items : [String], 
@@ -21,27 +21,27 @@ const TripSchema = new mongoose.Schema({
    },
   location: {
     meeting_place : { 
-      country: { type: String, required: true },
-      street_address: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      zip_code: { type: String, required: true }
+      country: { type: String },
+      street_address: { type: String },
+      city: { type: String },
+      state: { type: String },
+      zip_code: { type: String }
     },
-    trip_location : {type : String , required: true, index: true }
+    trip_location : {type : String , index: true }
   },
-  photos: { type: [String], required: true},
+  photos: { type: [String]},
   group_size: {
-    public: { type: Number, required: true, min: 4 },
-    private: { type: Number, required: true, min: 4, max : 25 }
+    public: { type: Number, min: 4 },
+    private: { type: Number, min: 4, max : 25 }
   },
   availability: 
     {
-      date: { type: Date, required: true, index: true },
-      start_time: { type: String, required: true, match: /^([01]\d|2[0-3]):([0-5]\d)$/ }
+      date: { type: Date, index: true },
+      start_time: { type: String, match: /^([01]\d|2[0-3]):([0-5]\d)$/ }
     },
   pricing: {
-    per_person: { type: Number, required: true, min: 0 },
-    per_instance: { type: Number, required: true, min : 0 }
+    per_person: { type: Number, min: 0 },
+    per_instance: { type: Number, min : 0 }
   },
   booking: { 
    cutoff_time : {type : String , required : true},
