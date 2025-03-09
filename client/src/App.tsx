@@ -1,18 +1,20 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from "./components/authentification/SignUp"; // Import the Register component
 import Profile from "./components/authentification/Profile"; // Import the Profile component
-import SignIn from "./components/authentification/SignIn";
+import Home from "./pages/Home";
+import ProfilePhoto from "./pages/ProfilePhoto";
 import SignUp from "./components/authentification/SignUp";
+import SignIn from "./components/authentification/SignIn";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Register />} />
+        <Route path="/" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile-information" element={<Home />} />
+        <Route path="/profile-photo" element={<ProfilePhoto />} />
       </Routes>
     </Router>
   );

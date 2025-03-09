@@ -14,6 +14,7 @@
     "@types/react-dom": "^19.0.4",
     "axios": "^1.8.1",
     "client": "file:",
+    "dotenv": "^16.4.7",
     "firebase": "^10.14.1",
     "firebaseui": "^6.1.0",
     "react": "^19.0.0",

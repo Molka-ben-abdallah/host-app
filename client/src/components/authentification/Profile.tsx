@@ -24,6 +24,8 @@ const Profile = () => {
         console.error("Error updating password:", error);
       }
     }
+    console.log(auth.currentUser);
+ 
   };
 
   return (

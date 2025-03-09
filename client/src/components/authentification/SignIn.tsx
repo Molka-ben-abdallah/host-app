@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Import Axios
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -10,7 +11,10 @@ import {
   googleProvider,
   facebookProvider,
 } from "../../config/firebaseConfig";
-import "../../App.css"; // Importing styles
+import "../../App.css";
+import getFriendlyErrorMessage from "../../utils/firebaseErrors";
+
+const API_BASE_URL = "http://localhost:5000/api/auth";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -22,6 +26,17 @@ const SignIn = () => {
   const [resetEmail, setResetEmail] = useState("");
   const [resetSuccess, setResetSuccess] = useState(false);
   const navigate = useNavigate();
+
+  // Function to check if user exists in DB
+  const checkUserInDB = async (uid: string) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/register/${uid}`);
+      return response.data.exists;
+    } catch (error) {
+      console.error("Error checking user:", error);
+      return false;
+    }
+  };
 
   // Email/Password Sign In
   const handleEmailSignIn = async (e: React.FormEvent) => {
@@ -35,15 +50,26 @@ const SignIn = () => {
         email,
         password
       );
-      if (!userCredential.user.emailVerified) {
+      const user = userCredential.user;
+
+      if (!user.emailVerified) {
         setError("Please verify your email before signing in.");
         setShowErrorModal(true);
         return;
       }
+
+      // Check if user exists in database
+      const userExists = await checkUserInDB(user.uid);
+      if (!userExists) {
+        setError("No account found. Please sign up first.");
+        setShowErrorModal(true);
+        return;
+      }
+
       navigate("/profile");
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setError(getFriendlyErrorMessage((err as any).code));
         setShowErrorModal(true);
       }
     } finally {
@@ -51,14 +77,24 @@ const SignIn = () => {
     }
   };
 
-  // Handle social login
+  // Social Sign-In (Google, Facebook)
   const handleSocialSignIn = async (provider: any) => {
     try {
-      await signInWithPopup(auth, provider);
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+
+      // Check if user exists in database
+      const userExists = await checkUserInDB(user.uid);
+      if (!userExists) {
+        setError("No account found. Please sign up first.");
+        setShowErrorModal(true);
+        return;
+      }
+
       navigate("/profile");
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setError(getFriendlyErrorMessage((err as any).code));
         setShowErrorModal(true);
       }
     }
@@ -72,12 +108,11 @@ const SignIn = () => {
       setShowResetModal(false);
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        setError(getFriendlyErrorMessage((err as any).code));
         setShowErrorModal(true);
       }
     }
   };
-
   return (
     <div className="App">
       <div className="card">
@@ -133,7 +168,7 @@ const SignIn = () => {
 
         <p>
           Don't have an account?{" "}
-          <a href="/signup" className="link-style">
+          <a href="/" className="link-style">
             Sign Up
           </a>
         </p>

@@ -1,39 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  onAuthStateChanged,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithPopup,
-  onAuthStateChanged,
 } from "firebase/auth";
 import {
   auth,
   googleProvider,
   facebookProvider,
 } from "../../config/firebaseConfig";
-import "../../App.css"; // Importing styles
+import getFriendlyErrorMessage from "../../utils/firebaseErrors";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State for pop-up
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  // Handle authentication with Google or Facebook
-  const handleSocialSignIn = async (provider: any) => {
-    try {
-      await signInWithPopup(auth, provider);
-      navigate("/profile");
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
-    }
-  };
+  // Sends token and user data to backend
+  const sendUserToBackend = useCallback(
+    async (user: any) => {
+      try {
+        const token = await user.getIdToken();
+        console.log("Generated token:", token);
 
-  // Email/Password Sign Up
+        const userData = {
+          uid: user.uid,
+          email: user.email,
+          name: user.name,
+          picture: user.picture,
+        };
+
+        console.log("User data:", userData);
+
+        const response = await fetch(
+          "http://localhost:5000/api/auth/register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Send token in Authorization header
+            },
+            body: JSON.stringify(userData),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("User registration failed.");
+        }
+
+        const responseData = await response.json();
+        console.log("Backend response:", responseData);
+
+        console.log("User successfully saved in database.");
+        navigate("/profile");
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(getFriendlyErrorMessage((err as any).code));
+        } else {
+          setError("An unknown error occurred.");
+        }
+      }
+    },
+    [navigate]
+  );
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user && user.emailVerified) {
+        console.log(
+          "User is logged in and verified, sending data to backend..."
+        );
+        await sendUserToBackend(user);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [sendUserToBackend]);
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -45,22 +93,42 @@ const SignUp = () => {
         email,
         password
       );
+      const user = userCredential.user;
 
-      // Send email verification
-      await sendEmailVerification(userCredential.user);
+      await sendUserToBackend(user);
+      await sendEmailVerification(user);
 
-      // Show the pop-up modal
       setShowModal(true);
-    } catch (err) {
+    } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message);
+        setError(getFriendlyErrorMessage((err as any).code));
+      } else {
+        setError("An unknown error occurred.");
       }
     } finally {
       setLoading(false);
     }
   };
 
-  // Close the pop-up and redirect to login
+  // Social Media Sign-Up (Google/Facebook)
+  const handleSocialSignUp = async (provider: any) => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      await sendUserToBackend(user);
+
+      console.log("User successfully saved in database.");
+      navigate("/profile");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(getFriendlyErrorMessage((err as any).code));
+      } else {
+        setError("An unknown error occurred.");
+      }
+    }
+  };
+
   const closeModal = () => {
     setShowModal(false);
     navigate("/signin");
@@ -70,7 +138,7 @@ const SignUp = () => {
     <div className="App">
       <div className="card">
         <h2>Create Your Account</h2>
-        <p>Join us and start your journey!</p>
+        <p className="text-2xl">Join us and start your journey!</p>
 
         {error && <p className="error-message">{error}</p>}
 
@@ -98,13 +166,13 @@ const SignUp = () => {
         <h3>Or sign up with:</h3>
         <div className="social-buttons">
           <button
-            onClick={() => handleSocialSignIn(googleProvider)}
+            onClick={() => handleSocialSignUp(googleProvider)}
             className="google-button"
           >
             Sign Up with Google
           </button>
           <button
-            onClick={() => handleSocialSignIn(facebookProvider)}
+            onClick={() => handleSocialSignUp(facebookProvider)}
             className="facebook-button"
           >
             Sign Up with Facebook
