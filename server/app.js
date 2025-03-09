@@ -19,9 +19,11 @@ app.use(morgan("dev"));
 app.use(cors({ origin: true, credentials: true }));
 
 //routes
+const authRoutes = require("./routes/authRoutes");
+app.use("/api/auth", require("./routes/authRoutes"));
 
-app.use("/api/auth",authRoutes);
-//port 
+// Use routes
+//port
 const port = process.env.PORT || 5000;
 
 //listener

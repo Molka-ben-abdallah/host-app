@@ -12,7 +12,7 @@ const Logout = () => {
 
   // If the user is logged out, redirect them to the login page
   if (redirect) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/signin" />;
   }
 
   return (
