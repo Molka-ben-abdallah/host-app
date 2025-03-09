@@ -68,19 +68,6 @@ const SignUp = () => {
     [navigate]
   );
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user && user.emailVerified) {
-        console.log(
-          "User is logged in and verified, sending data to backend..."
-        );
-        await sendUserToBackend(user);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [sendUserToBackend]);
-
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -99,8 +86,6 @@ const SignUp = () => {
         setShowModal(true);
         return;
       }
-
-      await sendUserToBackend(user);
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(handleFirebaseError(error));
@@ -111,7 +96,18 @@ const SignUp = () => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user && user.emailVerified) {
+        console.log(
+          "User is logged in and verified, sending data to backend..."
+        );
+        await sendUserToBackend(user);
+      }
+    });
 
+    return () => unsubscribe();
+  }, [sendUserToBackend]);
   const handleSocialSignUp = async (provider: any) => {
     try {
       const result = await signInWithPopup(auth, provider);
@@ -166,18 +162,22 @@ const SignUp = () => {
 
         <h3>Or sign up with:</h3>
         <div className="social-buttons">
-          <button 
+          <button
             onClick={() => handleSocialSignUp(googleProvider)}
             className="google-button my-2"
           >
-            <img src="/google-icon.png" alt="google icon" className="w-6 h-6"/>
+            <img src="/google-icon.png" alt="google icon" className="w-6 h-6" />
             Sign Up with Google
           </button>
           <button
             onClick={() => handleSocialSignUp(facebookProvider)}
             className="facebook-button"
           >
-            <img src="/facebook-icon.png" alt="google icon" className="w-6 h-6"/>
+            <img
+              src="/facebook-icon.png"
+              alt="google icon"
+              className="w-6 h-6"
+            />
             Sign Up with Facebook
           </button>
         </div>
@@ -199,7 +199,9 @@ const SignUp = () => {
               We've sent a verification email to <b>{email}</b>. Please check
               your inbox and click the link to activate your account.
             </p>
-            <button onClick={closeModal}>Got it!</button>
+            <button className="modal button" onClick={closeModal}>
+              Got it!
+            </button>
           </div>
         </div>
       )}

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import Axios
+import axios from "axios";
 import {
   signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
   signInWithPopup,
   sendPasswordResetEmail,
 } from "firebase/auth";
@@ -25,6 +28,7 @@ const SignIn = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const navigate = useNavigate();
 
@@ -46,6 +50,11 @@ const SignIn = () => {
     setLoading(true);
 
     try {
+      await setPersistence(
+        auth,
+        rememberMe ? browserLocalPersistence : browserSessionPersistence
+      );
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -71,6 +80,7 @@ const SignIn = () => {
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(handleFirebaseError(error));
+        setShowErrorModal(true);
       } else {
         setError("An unknown error occurred.");
       }
@@ -149,17 +159,23 @@ const SignIn = () => {
 
         <div className="flex justify-between gap-10 my-2">
           <div className="mt-1">
-            <input type="checkbox" name="remember-me" id="remember-me" className="w-3 h-3" />
-            <label htmlFor="remember-me" className="ml-2 cursor-pointer">remember me</label>
+            <input
+              type="checkbox"
+              name="remember-me"
+              id="remember-me"
+              className="w-3 h-3"
+            />
+            <label htmlFor="remember-me" className="ml-2 cursor-pointer">
+              remember me
+            </label>
           </div>
-            <button
-              className="hover:text-[#FFAF20] hover:underline  "
-              onClick={() => setShowResetModal(true)}
-            >
-              Forgot Password?
-            </button>
+          <button
+            className="hover:text-[#FFAF20] hover:underline  "
+            onClick={() => setShowResetModal(true)}
+          >
+            Forgot Password?
+          </button>
         </div>
-        
 
         <h3>Or sign in with:</h3>
         <div className="social-buttons">
@@ -167,15 +183,19 @@ const SignIn = () => {
             onClick={() => handleSocialSignIn(googleProvider)}
             className="google-button my-2"
           >
-            <img src="/google-icon.png" alt="google icon" className="w-6 h-6"/>
+            <img src="/google-icon.png" alt="google icon" className="w-6 h-6" />
             Sign In with Google
           </button>
-          
+
           <button
             onClick={() => handleSocialSignIn(facebookProvider)}
             className="facebook-button"
           >
-            <img src="/facebook-icon.png" alt="facebook icon" className="w-6 h-6" />
+            <img
+              src="/facebook-icon.png"
+              alt="facebook icon"
+              className="w-6 h-6"
+            />
             Sign In with Facebook
           </button>
         </div>
@@ -194,7 +214,12 @@ const SignIn = () => {
           <div className="modal">
             <h2>Oops!</h2>
             <p>{error}</p>
-            <button onClick={() => setShowErrorModal(false)}>Close</button>
+            <button
+              className="modal button"
+              onClick={() => setShowErrorModal(false)}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
@@ -212,8 +237,15 @@ const SignIn = () => {
               onChange={(e) => setResetEmail(e.target.value)}
               required
             />
-            <button onClick={handlePasswordReset}>Send Reset Email</button>
-            <button onClick={() => setShowResetModal(false)}>Cancel</button>
+            <button className="modal button" onClick={handlePasswordReset}>
+              Send Reset password
+            </button>
+            <button
+              className="modal button"
+              onClick={() => setShowResetModal(false)}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
@@ -226,7 +258,12 @@ const SignIn = () => {
             <p>
               A password reset email has been sent. Please check your inbox.
             </p>
-            <button onClick={() => setResetSuccess(false)}>OK</button>
+            <button
+              className="modal button"
+              onClick={() => setResetSuccess(false)}
+            >
+              OK
+            </button>
           </div>
         </div>
       )}
