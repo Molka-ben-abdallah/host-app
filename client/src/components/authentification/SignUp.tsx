@@ -139,12 +139,12 @@ const SignUp = () => {
     <div className="App">
       <div className="card">
         <h2>Create Your Account</h2>
-        <p className="text-2xl">Join us and start your journey!</p>
+        <p className="text-xl">Join us and start your journey!</p>
 
         {error && <p className="error-message">{error}</p>}
 
         {/* Sign-Up Form */}
-        <form onSubmit={handleSignUp}>
+        <form onSubmit={handleSignUp} className="my-3">
           <input
             type="email"
             placeholder="Enter your email"
@@ -159,23 +159,25 @@ const SignUp = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit" disabled={loading}>
+          <button type="submit" disabled={loading} className="button">
             {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 
         <h3>Or sign up with:</h3>
         <div className="social-buttons">
-          <button
+          <button 
             onClick={() => handleSocialSignUp(googleProvider)}
-            className="google-button"
+            className="google-button my-2"
           >
+            <img src="/google-icon.png" alt="google icon" className="w-6 h-6"/>
             Sign Up with Google
           </button>
           <button
             onClick={() => handleSocialSignUp(facebookProvider)}
             className="facebook-button"
           >
+            <img src="/facebook-icon.png" alt="google icon" className="w-6 h-6"/>
             Sign Up with Facebook
           </button>
         </div>

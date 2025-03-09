@@ -140,33 +140,42 @@ const SignIn = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit" disabled={loading}>
+          <button type="submit" disabled={loading} className="button bg">
             {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
         {/* Forgot Password */}
-        <p>
-          <button
-            className="forgot-password"
-            onClick={() => setShowResetModal(true)}
-          >
-            Forgot Password?
-          </button>
-        </p>
+
+        <div className="flex justify-between gap-10 my-2">
+          <div className="mt-1">
+            <input type="checkbox" name="remember-me" id="remember-me" className="w-3 h-3" />
+            <label htmlFor="remember-me" className="ml-2 cursor-pointer">remember me</label>
+          </div>
+            <button
+              className="hover:text-[#FFAF20] hover:underline  "
+              onClick={() => setShowResetModal(true)}
+            >
+              Forgot Password?
+            </button>
+        </div>
+        
 
         <h3>Or sign in with:</h3>
         <div className="social-buttons">
           <button
             onClick={() => handleSocialSignIn(googleProvider)}
-            className="google-button"
+            className="google-button my-2"
           >
+            <img src="/google-icon.png" alt="google icon" className="w-6 h-6"/>
             Sign In with Google
           </button>
+          
           <button
             onClick={() => handleSocialSignIn(facebookProvider)}
             className="facebook-button"
           >
+            <img src="/facebook-icon.png" alt="facebook icon" className="w-6 h-6" />
             Sign In with Facebook
           </button>
         </div>

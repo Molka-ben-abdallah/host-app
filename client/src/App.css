@@ -1,203 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Center the app content */
 .App {
-  text-align: center;
-  background-color: #f5f5f5; /* Light background */
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Arial", sans-serif;
+  @apply text-center bg-gray-100 min-h-screen flex justify-center items-center font-sans;
 }
 
-/* Styling the registration card */
 .card {
-  background-color: #fff;
-  padding: 40px;
-  width: 350px;
-  border-radius: 10px; /* More rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: left; /* Align text to the left for better input alignment */
+  @apply bg-white p-8 md:p-10 w-full max-w-sm md:max-w-md rounded-xl shadow-lg flex flex-col items-center;
 }
 
 /* Heading style */
 .card h2 {
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center; /* Ensure the heading is centered */
+  @apply mb-5 text-gray-800 text-2xl font-bold text-center;
 }
 
 /* Styling form input fields */
 input {
-  width: calc(100% - 20px); /* Make the input fields full width with padding */
-  padding: 12px;
-  margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 8px; /* More rounded corners */
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
-
-input:focus {
-  border-color: #ffbc20; /* Yellow border on focus */
-  outline: none;
-  box-shadow: 0 0 5px rgba(255, 188, 32, 0.5);
+  @apply w-full p-3 mb-3 border border-gray-300 rounded-lg text-lg transition-all focus:border-yellow-500 focus:outline-none;
 }
 
 /* Error message styling */
 .error-message {
-  color: red;
-  font-size: 14px;
-  margin-bottom: 15px;
+  @apply text-red-500 text-sm mb-4;
 }
 
 /* Button style */
-button {
-  width: 100%; /* Full width for button */
-  padding: 12px;
-  background-color: #ffbc20; /* Updated yellow */
-  color: white;
-  border: none;
-  border-radius: 8px; /* More rounded corners */
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 10px 0; /* Space between the buttons */
+.color-hover {
+  @apply hover:bg-[#e68a00];
 }
-
-button:hover {
-  background-color: #e69c18; /* Darker yellow on hover */
+.default-color {
+  @apply bg-[#FFAF20];
+}
+.button {
+  @apply w-full p-3 bg-[#FFAF20] text-white rounded-lg text-lg cursor-pointer transition-all hover:bg-[#e68a00] mt-2;
 }
 
 /* Social button styles */
 .social-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 5px; /* Adjusted spacing */
-  width: 100%; /* Make social buttons full width */
+  @apply flex flex-col gap-1 w-full;
 }
 
 /* Google button styles */
 .google-button {
-  background-color: white;
-  color: #4285f4; /* Google Blue */
-  border: 1px solid #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  border-radius: 8px;
-  width: 100%; /* Make the Google button full width */
-}
-
-.google-button:hover {
-  background-color: #f1f1f1;
+  @apply bg-white text-blue-500 border border-gray-300 flex justify-center items-center gap-2 p-3 rounded-lg w-full hover:bg-gray-100;
 }
 
 .google-button .icon {
-  width: 20px;
-  height: 20px;
+  @apply w-5 h-5;
 }
 
 /* Facebook button styles */
 .facebook-button {
-  background-color: #1877f2; /* Facebook Blue */
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  border-radius: 8px;
-  width: 100%; /* Make the Facebook button full width */
-}
-
-.facebook-button:hover {
-  background-color: #1558b0;
+  @apply bg-blue-600 text-white flex justify-center items-center gap-2 p-3 rounded-lg w-full hover:bg-blue-700;
 }
 
 .facebook-button .icon {
-  width: 20px;
-  height: 20px;
+  @apply w-5 h-5;
 }
 
-/* Style for the text links */
+/* Style for text links */
 .link-style {
-  color: #fbbd00; /* Yellow color */
-  text-decoration: none;
-  font-size: 14px;
+  @apply text-yellow-500 text-sm no-underline hover:underline;
 }
 
-.link-style:hover {
-  text-decoration: underline;
-}
-
-/* MODAL STYLING */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  text-align: center;
-  width: 320px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Modal title */
-.modal h2 {
-  margin-bottom: 15px;
-  font-size: 22px;
-  color: #333;
-}
-
-/* Modal input field fix */
-.modal input {
-  width: 90%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  font-size: 16px;
-}
-
-/* Reset Email and Cancel buttons */
-.modal button {
-  width: 100%;
-  background-color: #4caf50;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.modal button:hover {
-  background-color: #45a049;
-}
-
-/* Cancel button specific style */
-.modal .cancel-button {
-  background-color: #d9534f;
-}
-
-.modal .cancel-button:hover {
-  background-color: #c9302c;
+.step{
+  @apply text-yellow-400 font-semibold;
 }

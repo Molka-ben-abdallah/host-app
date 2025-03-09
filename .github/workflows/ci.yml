@@ -18,18 +18,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'  
-      
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            server/node_modules
-          key: npm-server-${{ runner.os }}-${{ hashFiles('server/package-lock.json') }}
-          restore-keys: |
-            npm-server-${{ runner.os }}-
-
+          node-version: 20  # Use Node.js 20 LTS for stability
 
       - name: Install Server Dependencies
         run: |
