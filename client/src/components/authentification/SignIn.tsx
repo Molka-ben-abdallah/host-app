@@ -12,7 +12,8 @@ import {
   facebookProvider,
 } from "../../config/firebaseConfig";
 import "../../App.css";
-import getFriendlyErrorMessage from "../../utils/firebaseErrors";
+import { FirebaseError } from "firebase/app";
+import { handleFirebaseError } from "../../utils/firebaseErrorHandler";
 
 const API_BASE_URL = "http://localhost:5000/api/auth";
 
@@ -27,16 +28,16 @@ const SignIn = () => {
   const [resetSuccess, setResetSuccess] = useState(false);
   const navigate = useNavigate();
 
-  // Function to check if user exists in DB
-  const checkUserInDB = async (uid: string) => {
+  // Function to check if user exists in DB based on email
+  /*const checkUserInDB = async (email: string | null) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/register/${uid}`);
+      const response = await axios.get(`${API_BASE_URL}/register/${email}`);
       return response.data.exists;
     } catch (error) {
       console.error("Error checking user:", error);
       return false;
     }
-  };
+  };*/
 
   // Email/Password Sign In
   const handleEmailSignIn = async (e: React.FormEvent) => {
@@ -58,19 +59,20 @@ const SignIn = () => {
         return;
       }
 
-      // Check if user exists in database
-      const userExists = await checkUserInDB(user.uid);
+      // Check if user exists in the database based on email
+      /* const userExists = await checkUserInDB(user.email);
       if (!userExists) {
         setError("No account found. Please sign up first.");
         setShowErrorModal(true);
         return;
-      }
+      }*/
 
-      navigate("/profile");
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(getFriendlyErrorMessage((err as any).code));
-        setShowErrorModal(true);
+      navigate("/profile"); // Redirect to profile if user exists in DB
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(handleFirebaseError(error));
+      } else {
+        setError("An unknown error occurred.");
       }
     } finally {
       setLoading(false);
@@ -83,19 +85,21 @@ const SignIn = () => {
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
 
-      // Check if user exists in database
-      const userExists = await checkUserInDB(user.uid);
+      // Check if user exists in the database based on email
+      /*  const userExists = await checkUserInDB(user.email);
       if (!userExists) {
         setError("No account found. Please sign up first.");
         setShowErrorModal(true);
         return;
-      }
+      }*/
 
-      navigate("/profile");
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(getFriendlyErrorMessage((err as any).code));
+      navigate("/profile"); // Redirect to profile if user exists in DB
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(handleFirebaseError(error));
         setShowErrorModal(true);
+      } else {
+        setError("An unknown error occurred.");
       }
     }
   };
@@ -108,11 +112,12 @@ const SignIn = () => {
       setShowResetModal(false);
     } catch (err) {
       if (err instanceof Error) {
-        setError(getFriendlyErrorMessage((err as any).code));
+        setError(err.message);
         setShowErrorModal(true);
       }
     }
   };
+
   return (
     <div className="App">
       <div className="card">

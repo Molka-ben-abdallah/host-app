@@ -11,8 +11,8 @@ import {
   googleProvider,
   facebookProvider,
 } from "../../config/firebaseConfig";
-import getFriendlyErrorMessage from "../../utils/firebaseErrors";
-
+import { FirebaseError } from "firebase/app";
+import { handleFirebaseError } from "../../utils/firebaseErrorHandler";
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,7 +43,7 @@ const SignUp = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Send token in Authorization header
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(userData),
           }
@@ -57,10 +57,9 @@ const SignUp = () => {
         console.log("Backend response:", responseData);
 
         console.log("User successfully saved in database.");
-        navigate("/profile");
       } catch (err: unknown) {
         if (err instanceof Error) {
-          setError(getFriendlyErrorMessage((err as any).code));
+          setError(err.message);
         } else {
           setError("An unknown error occurred.");
         }
@@ -95,13 +94,16 @@ const SignUp = () => {
       );
       const user = userCredential.user;
 
-      await sendUserToBackend(user);
-      await sendEmailVerification(user);
+      if (!user.emailVerified) {
+        await sendEmailVerification(user);
+        setShowModal(true);
+        return;
+      }
 
-      setShowModal(true);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(getFriendlyErrorMessage((err as any).code));
+      await sendUserToBackend(user);
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(handleFirebaseError(error));
       } else {
         setError("An unknown error occurred.");
       }
@@ -110,7 +112,6 @@ const SignUp = () => {
     }
   };
 
-  // Social Media Sign-Up (Google/Facebook)
   const handleSocialSignUp = async (provider: any) => {
     try {
       const result = await signInWithPopup(auth, provider);
@@ -120,9 +121,10 @@ const SignUp = () => {
 
       console.log("User successfully saved in database.");
       navigate("/profile");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(getFriendlyErrorMessage((err as any).code));
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(handleFirebaseError(error));
+        setShowModal(true);
       } else {
         setError("An unknown error occurred.");
       }
@@ -131,7 +133,6 @@ const SignUp = () => {
 
   const closeModal = () => {
     setShowModal(false);
-    navigate("/signin");
   };
 
   return (
