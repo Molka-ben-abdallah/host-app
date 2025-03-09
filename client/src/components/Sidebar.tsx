@@ -18,7 +18,7 @@ const Sidebar: React.FC = () => {
   return (
     <aside className="w-fit bg-[#10455B] text-white p-6 h-screen max-md:w-1/4">
       <img src="/logo.png" alt="Logo" className="mb-6 mx-auto" />
-      <h2 className="text-lg font-bold mb-4">Your Hosting <br/>Application Process</h2>
+      <h2 className="text-lg font-primaryBold mb-4">Your Hosting <br/>Application Process</h2>
       <nav>
         <ul>
           {[ 
@@ -60,7 +60,7 @@ const Sidebar: React.FC = () => {
                 {title}
               </div>
               {selectedStep === step && (
-                <ul className="ml-4">
+                <ul className="ml-4 ">
                   {links.map(({ path, label }) => (
                     <li key={path}>
                       <Link to={path} className={getClass(path)}>{label}</Link>

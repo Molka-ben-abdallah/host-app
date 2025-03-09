@@ -12,14 +12,14 @@ type InputProps = {
 const Input: React.FC<InputProps> = ({ label, type, value, onChange, placeholder, required }) => {
   return (
     <div className="mb-4">
-      {label && <label className="block text-gray-700">{label}</label>}
+      {label && <label className="block text-gray-700 font-primaryRegular">{label}</label>}
       <input
         type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
         required={required}
-        className="min-w-[100px] w-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#FFAF20]"
+        className="font-primaryMedium min-w-[100px] w-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#FFAF20]"
       />
     </div>
   );
