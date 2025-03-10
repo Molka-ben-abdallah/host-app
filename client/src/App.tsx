@@ -7,6 +7,9 @@ import ProfilePhoto from "./pages/ProfilePhoto";
 import SignUp from "./components/authentification/SignUp";
 import SignIn from "./components/authentification/SignIn";
 import Landing from "./pages/Landing";
+import Location from "./pages/Location";
+import Passions from "./pages/Passions";
+import Languages from "./pages/Languages";
 
 function App() {
   return (
@@ -17,6 +20,9 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile-information" element={<Home />} />
         <Route path="/profile-photo" element={<ProfilePhoto />} />
+        <Route path="/location" element={<Location />} />
+        <Route path="/languages" element={<Languages />} />
+        <Route path="/passions" element={<Passions />} />
         <Route path="/landing" element={<Landing/>} />
       </Routes>
     </Router>

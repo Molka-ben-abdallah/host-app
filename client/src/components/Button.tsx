@@ -17,7 +17,8 @@ const Button: React.FC<ButtonProps> = ({ nextPage, formId }) => {
           form.reportValidity(); 
           return; 
         }
-        form.submit(); 
+        const event = new Event("submit", { bubbles: true, cancelable: true });
+        form.dispatchEvent(event);
       }
     }
     navigate(nextPage);

@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  uid: { type: String, required: true },
+  uid: { type: String },
   password: { type: String },
-  first_name: { type: String, minlength: 3, maxlength: 20 },
-  last_name: { type: String, minlength: 3, maxlength: 50 },
+  firstName: { type: String, minlength: 3, maxlength: 20 },
+  lastName: { type: String, minlength: 3, maxlength: 50 },
   birthday: {
     type: Date,
     validate: {
@@ -32,8 +32,8 @@ const UserSchema = new mongoose.Schema({
   location: {
     country: { type: String, index: true },
     city: { type: String, index: true },
-    address: { type: String },
     local_years: { type: Number, min: 0 },
+    address: { type: String },
   },
   languages: {
     name: { type: [String] },

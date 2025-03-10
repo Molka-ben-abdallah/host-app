@@ -60,9 +60,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title, tip, nextPage 
         
         <div className="mt-auto self-end">
         {/* Only show the button if there's a next step */}
-        {currentStepIndex < steps.length - 1 && (
-          <Button nextPage={nextPage} formId="profileForm" />
-        )}
+       
+          <Button nextPage={nextPage} formId="formId" />
+        
         </div>
       </div>
       

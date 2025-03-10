@@ -203,7 +203,7 @@ const SignUp = () => {
               We've sent a verification email to <b>{email}</b>. Please check
               your inbox and click the link to activate your account.
             </p>
-            <button onClick={closeModal}>Got it!</button>
+            <button onClick={closeModal} className="button">Got it!</button>
           </div>
         </div>
       )}

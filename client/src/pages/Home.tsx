@@ -1,7 +1,6 @@
 import React, { useState ,useRef } from 'react';
 import MainLayout from '../layouts/MainLayout';
 import Input from '../components/Input';
-import Button from '../components/Button';
 
 const Home: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -17,10 +16,39 @@ const Home: React.FC = () => {
     setInput(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (formRef.current?.checkValidity()) {
-      console.log('Form submitted successfully!');
+      const formData = {
+        firstName,
+        lastName,
+        birthday,
+        nationality,
+        email,
+        mobile
+      };
+
+      try {
+        const response = await fetch('http://localhost:5000/api/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to submit form');
+        }
+
+        const data = await response.json();
+        console.log('Form submitted successfully:', data);
+        const userId = data.profile._id; // Make sure you're using the correct path for _id
+        console.log('user id:', userId);
+        localStorage.setItem('userId', userId);
+        window.location.reload();
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
     } else {
       formRef.current?.reportValidity();
     }
@@ -31,11 +59,11 @@ const Home: React.FC = () => {
       <MainLayout
         title="Profile Informations"
         tip="Guests want to know who’s hosting them. This must be your actual name, not the name of a business. Only your first name will appear on your page. If you have co-hosts, you'll be able to add them later."
-        nextPage="/profile-photo"
+        nextPage="/location"
       >
-        <form className=" w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap mx-auto my-10 px-4 sm:px-0"
-           id="profileForm" ref={formRef}
-           method='post' action=""
+        <form className=" form"
+           id="formId" ref={formRef}
+           onSubmit={handleSubmit}
         >
           <Input
             label="First Name"

@@ -11,8 +11,8 @@ const Sidebar: React.FC = () => {
 
   const getClass = (link: string): string => {
     return location.pathname === link
-      ? 'block py-1 px-2 bg-[rgba(255,175,32,0.2)] font-medium w-full border-l-4 border-l-yellow-500 pl-4'
-      : 'block py-1 px-2 font-light pl-4';
+      ? 'block py-1 px-2 bg-[rgba(255,175,32,0.2)] font-primaryMedium w-full border-l-4 border-l-yellow-500 pl-4'
+      : 'block py-1 px-2 font-primaryLight pl-4';
   };
 
   return (

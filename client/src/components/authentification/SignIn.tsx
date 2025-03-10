@@ -199,7 +199,7 @@ const SignIn = () => {
         <div className="modal-overlay">
           <div className="modal">
             <h2>Reset Password</h2>
-            <p>Enter your email to receive a password reset link.</p>
+            <p className="my-3">Enter your email to receive a password reset link.</p>
             <input
               type="email"
               placeholder="Enter your email"
@@ -207,8 +207,8 @@ const SignIn = () => {
               onChange={(e) => setResetEmail(e.target.value)}
               required
             />
-            <button onClick={handlePasswordReset}>Send Reset Email</button>
-            <button onClick={() => setShowResetModal(false)}>Cancel</button>
+            <button onClick={handlePasswordReset} className="button">Send Reset Email</button>
+            <button onClick={() => setShowResetModal(false)} className="button">Cancel</button>
           </div>
         </div>
       )}

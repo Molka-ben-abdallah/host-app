@@ -36,12 +36,12 @@ const Profile = () => {
 
         <div className="button-group">
           <button
-            className="change-password"
+            className="change-password button"
             onClick={() => setShowChangePasswordModal(true)}
           >
             Change Password
           </button>
-          <button className="logout" onClick={handleLogout}>
+          <button className="logout button" onClick={handleLogout}>
             Logout
           </button>
         </div>
@@ -58,7 +58,7 @@ const Profile = () => {
             />
             <button onClick={handleChangePassword}>Update Password</button>
             <button
-              className="close-modal"
+              className="close-modal button"
               onClick={() => setShowChangePasswordModal(false)}
             >
               Cancel
