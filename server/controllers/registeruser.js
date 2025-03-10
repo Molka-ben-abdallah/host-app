@@ -18,7 +18,7 @@ const registerUser = async (req, res) => {
     const uid = decodedToken.uid;
     const email = decodedToken.email;
     const name = decodedToken.name;
-    const picture = decodedToken.picture;
+    const photoUrl = decodedToken.picture;
 
     if (!uid || !email) {
       return res.status(400).json({ message: "Invalid token payload" });
@@ -34,11 +34,11 @@ const registerUser = async (req, res) => {
       uid,
       email,
       name,
-      picture,
+      photoUrl,
     });
 
     await user.save();
-    console.log("User registered and saved to DB:", { uid, email });
+    console.log("User registered and saved to DB:", { uid, email, name , picture });
 
     res.status(201).json({
       message: "User registered successfully",

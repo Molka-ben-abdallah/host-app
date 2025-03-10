@@ -33,16 +33,6 @@ const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Function to check if user exists in DB based on email
-  /*const checkUserInDB = async (email: string | null) => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/register/${email}`);
-      return response.data.exists;
-    } catch (error) {
-      console.error("Error checking user:", error);
-      return false;
-    }
-  };*/
   const sendUserToBackend = async (user: any) => {
     try {
       const token = await user.getIdToken();
@@ -86,15 +76,6 @@ const SignIn = () => {
         return;
       }
 
-      // Check if user exists in the database based on email
-      /* const userExists = await checkUserInDB(user.email);
-      if (!userExists) {
-        setError("No account found. Please sign up first.");
-        setShowErrorModal(true);
-        return;
-      }*/
-
-      await sendUserToBackend(user);
       navigate("/profile"); // Redirect to profile if user exists in DB
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -115,15 +96,7 @@ const SignIn = () => {
       const user = userCredential.user;
 
       navigate("/profile");
-      // Check if user exists in the database based on email
-      /*  const userExists = await checkUserInDB(user.email);
-      if (!userExists) {
-        setError("No account found. Please sign up first.");
-        setShowErrorModal(true);
-        return;
-      }*/
-
-      // Redirect to profile if user exists in DB
+      await sendUserToBackend(user);
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(handleFirebaseError(error));
@@ -149,18 +122,21 @@ const SignIn = () => {
   };
 
   return (
-    <div className="App">
-      <div className="card">
-        <h2>Welcome Back!</h2>
-        <p>Sign in to continue.</p>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back!</h2>
 
-        {/* Sign-In Form */}
-        <form onSubmit={handleEmailSignIn}>
+        {error && (
+          <p className="bg-red-100 text-red-700 p-3 rounded-lg mb-4">{error}</p>
+        )}
+
+        <form onSubmit={handleEmailSignIn} className="space-y-4">
           <input
             type="email"
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           />
           <input
@@ -168,75 +144,82 @@ const SignIn = () => {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           />
-          <button type="submit" disabled={loading} className="button bg">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#FFBC20] text-black p-3 rounded-lg hover:bg-[#FFA500] disabled:bg-[#FFD773] transition-colors font-semibold"
+          >
             {loading ? "Signing In..." : "Sign In"}
           </button>
+
+          <div className="flex justify-between items-center">
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 text-[#FFBC20] rounded focus:ring-[#FFBC20]"
+              />
+              <span className="text-gray-600">Remember me</span>
+            </label>
+            <button
+              onClick={() => setShowResetModal(true)}
+              className="text-gray-600 hover:text-[#FFBC20] hover:underline"
+            >
+              Forgot Password?
+            </button>
+          </div>
         </form>
 
-        {/* Forgot Password */}
-
-        <div className="flex justify-between gap-10 my-2">
-          <div className="mt-1">
-            <input
-              type="checkbox"
-              name="remember-me"
-              id="remember-me"
-              className="w-3 h-3"
-            />
-            <label htmlFor="remember-me" className="ml-2 cursor-pointer">
-              remember me
-            </label>
-          </div>
-          <button
-            className="hover:text-[#FFAF20] hover:underline  "
-            onClick={() => setShowResetModal(true)}
-          >
-            Forgot Password?
-          </button>
+        <div className="my-6 flex items-center">
+          <div className="flex-1 border-t border-gray-300"></div>
+          <span className="mx-4 text-gray-500">Or continue with</span>
+          <div className="flex-1 border-t border-gray-300"></div>
         </div>
 
-        <h3>Or sign in with:</h3>
-        <div className="social-buttons">
+        <div className="space-y-3">
           <button
             onClick={() => handleSocialSignIn(googleProvider)}
-            className="google-button my-2"
+            className="w-full flex items-center justify-center gap-2 bg-white border text-gray-700 p-3 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            <img src="/google-icon.png" alt="google icon" className="w-6 h-6" />
+            <img src="/google-icon.png" alt="google" className="w-6 h-6" />
             Sign In with Google
           </button>
-
           <button
             onClick={() => handleSocialSignIn(facebookProvider)}
-            className="facebook-button"
+            className="w-full flex items-center justify-center gap-2 bg-[#1877F2] text-white p-3 rounded-lg hover:bg-[#166FE5] transition-colors"
           >
-            <img
-              src="/facebook-icon.png"
-              alt="facebook icon"
-              className="w-6 h-6"
-            />
+            <img src="/facebook-icon.png" alt="facebook" className="w-6 h-6" />
             Sign In with Facebook
           </button>
         </div>
 
-        <p>
+        <p className="text-center mt-6 text-gray-600">
           Don't have an account?{" "}
-          <a href="/" className="link-style">
+          <a href="/" className="text-[#FFBC20] hover:underline">
             Sign Up
           </a>
         </p>
       </div>
 
-      {/* Error Modal */}
+      {/* Modals */}
       {showErrorModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Oops!</h2>
-            <p>{error}</p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md relative">
             <button
-              className="modal button"
               onClick={() => setShowErrorModal(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Oops!</h2>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <button
+              onClick={() => setShowErrorModal(false)}
+              className="w-full p-3 bg-[#FFBC20] text-black rounded-lg hover:bg-[#FFA500] transition-colors font-semibold"
             >
               Close
             </button>
@@ -244,43 +227,54 @@ const SignIn = () => {
         </div>
       )}
 
-      {/* Reset Password Modal */}
       {showResetModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Reset Password</h2>
-            <p>Enter your email to receive a password reset link.</p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md relative">
+            <button
+              onClick={() => setShowResetModal(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              Reset Password
+            </h2>
             <input
               type="email"
               placeholder="Enter your email"
               value={resetEmail}
               onChange={(e) => setResetEmail(e.target.value)}
+              className="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />
-            <button className="modal button" onClick={handlePasswordReset}>
-              Send Reset password
-            </button>
-            <button
-              className="modal button"
-              onClick={() => setShowResetModal(false)}
-            >
-              Cancel
-            </button>
+            <div className="space-y-3">
+              <button
+                onClick={handlePasswordReset}
+                className="w-full p-3 bg-[#FFBC20] text-black rounded-lg hover:bg-[#FFA500] transition-colors font-semibold"
+              >
+                Send Reset Link
+              </button>
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="w-full p-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Success Message */}
       {resetSuccess && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Success!</h2>
-            <p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md relative">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Success!</h2>
+            <p className="text-gray-600 mb-6">
               A password reset email has been sent. Please check your inbox.
             </p>
             <button
-              className="modal button"
               onClick={() => setResetSuccess(false)}
+              className="w-full p-3 bg-[#FFBC20] text-black rounded-lg hover:bg-[#FFA500] transition-colors font-semibold"
             >
               OK
             </button>
