@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   signInWithEmailAndPassword,
@@ -31,6 +31,7 @@ const SignIn = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Function to check if user exists in DB based on email
   /*const checkUserInDB = async (email: string | null) => {
@@ -42,8 +43,25 @@ const SignIn = () => {
       return false;
     }
   };*/
+  const sendUserToBackend = async (user: any) => {
+    try {
+      const token = await user.getIdToken();
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        name: user.displayName || "",
+        picture: user.photoURL || "",
+      };
 
-  // Email/Password Sign In
+      await axios.post(`${API_BASE_URL}/register`, userData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (error) {
+      console.error("Error saving user to backend:", error);
+      throw error;
+    }
+  };
+
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -76,6 +94,7 @@ const SignIn = () => {
         return;
       }*/
 
+      await sendUserToBackend(user);
       navigate("/profile"); // Redirect to profile if user exists in DB
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -95,6 +114,7 @@ const SignIn = () => {
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
 
+      navigate("/profile");
       // Check if user exists in the database based on email
       /*  const userExists = await checkUserInDB(user.email);
       if (!userExists) {
@@ -103,7 +123,7 @@ const SignIn = () => {
         return;
       }*/
 
-      navigate("/profile"); // Redirect to profile if user exists in DB
+      // Redirect to profile if user exists in DB
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(handleFirebaseError(error));

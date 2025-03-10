@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, signOut, updatePassword } from "firebase/auth";
+import { signOut, updatePassword } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
 
 const Profile = () => {
@@ -9,19 +9,8 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("User is still logged in:", user);
-        navigate("/profile"); // Redirect if already logged in
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
   const handleLogout = async () => {
     await signOut(auth);
-    console.log("User logged out");
     navigate("/signin");
   };
 

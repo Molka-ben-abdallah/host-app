@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   onAuthStateChanged,
@@ -13,60 +13,17 @@ import {
 } from "../../config/firebaseConfig";
 import { FirebaseError } from "firebase/app";
 import { handleFirebaseError } from "../../utils/firebaseErrorHandler";
+import axios from "axios";
+const API_BASE_URL = "http://localhost:5000/api/auth";
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [waitingForVerification, setWaitingForVerification] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
-
-  // Sends token and user data to backend
-  const sendUserToBackend = useCallback(
-    async (user: any) => {
-      try {
-        const token = await user.getIdToken();
-        console.log("Generated token:", token);
-
-        const userData = {
-          uid: user.uid,
-          email: user.email,
-          name: user.name,
-          picture: user.picture,
-        };
-
-        console.log("User data:", userData);
-
-        const response = await fetch(
-          "http://localhost:5000/api/auth/register",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(userData),
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("User registration failed.");
-        }
-
-        const responseData = await response.json();
-        console.log("Backend response:", responseData);
-
-        console.log("User successfully saved in database.");
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("An unknown error occurred.");
-        }
-      }
-    },
-    [navigate]
-  );
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,13 +36,10 @@ const SignUp = () => {
         email,
         password
       );
-      const user = userCredential.user;
-
-      if (!user.emailVerified) {
-        await sendEmailVerification(user);
-        setShowModal(true);
-        return;
-      }
+      const newUser = userCredential.user;
+      await sendEmailVerification(newUser);
+      setShowModal(true);
+     
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(handleFirebaseError(error));
@@ -96,31 +50,29 @@ const SignUp = () => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user && user.emailVerified) {
-        console.log(
-          "User is logged in and verified, sending data to backend..."
-        );
-        await sendUserToBackend(user);
-      }
-    });
 
-    return () => unsubscribe();
-  }, [sendUserToBackend]);
   const handleSocialSignUp = async (provider: any) => {
     try {
       const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+      const socialUser = result.user;
 
-      await sendUserToBackend(user);
+      // Send user data to backend immediately
+      const token = await socialUser.getIdToken();
+      const userData = {
+        uid: socialUser.uid,
+        email: socialUser.email,
+        name: socialUser.displayName || "",
+        picture: socialUser.photoURL || "",
+      };
 
-      console.log("User successfully saved in database.");
+      await axios.post(`${API_BASE_URL}/register`, userData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       navigate("/profile");
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(handleFirebaseError(error));
-        setShowModal(true);
       } else {
         setError("An unknown error occurred.");
       }
@@ -129,6 +81,12 @@ const SignUp = () => {
 
   const closeModal = () => {
     setShowModal(false);
+    navigate("/signin", {
+      state: {
+        emailSent: true,
+        email: email,
+      },
+    });
   };
 
   return (
@@ -139,7 +97,6 @@ const SignUp = () => {
 
         {error && <p className="error-message">{error}</p>}
 
-        {/* Sign-Up Form */}
         <form onSubmit={handleSignUp} className="my-3">
           <input
             type="email"
@@ -175,7 +132,7 @@ const SignUp = () => {
           >
             <img
               src="/facebook-icon.png"
-              alt="google icon"
+              alt="facebook icon"
               className="w-6 h-6"
             />
             Sign Up with Facebook
@@ -190,7 +147,6 @@ const SignUp = () => {
         </p>
       </div>
 
-      {/* Modal Pop-up */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -199,6 +155,7 @@ const SignUp = () => {
               We've sent a verification email to <b>{email}</b>. Please check
               your inbox and click the link to activate your account.
             </p>
+            <p>Once verified, your account will be activated automatically.</p>
             <button className="modal button" onClick={closeModal}>
               Got it!
             </button>
