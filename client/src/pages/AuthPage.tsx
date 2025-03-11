@@ -4,66 +4,99 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import {
   auth,
   googleProvider,
   facebookProvider,
-} from "../../config/firebaseConfig";
+} from "../config/firebaseConfig";
 import { FirebaseError } from "firebase/app";
-import { handleFirebaseError } from "../../utils/firebaseErrorHandler";
+import { handleFirebaseError } from "../utils/firebaseErrorHandler";
 import axios from "axios";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const API_BASE_URL = "http://localhost:5000/api/auth";
 
-const SignUp = () => {
+const AuthPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
   const [cooldown, setCooldown] = useState(0);
   const [modalError, setModalError] = useState("");
   const [modalSuccess, setModalSuccess] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [isSignUp, setIsSignUp] = useState(true);
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
 
   const sendUserToBackend = async (user: any) => {
     try {
       const token = await user.getIdToken();
-      console.log("Generated token:", token);
-
+      console.log("token:", token);
       const userData = {
         uid: user.uid,
         email: user.email,
-        // Use proper Firebase User property names
-        name: user.displayName || "",
-        photoUrl: user.photoURL || "",
+        name: user.name || "",
+        photoUrl: user.picture || "",
       };
-      console.log("User data being sent to backend:", userData);
 
-      // Proper axios request with corrected headers and config
       const response = await axios.post(`${API_BASE_URL}/register`, userData, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Fixed template literal syntax
+          Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log("Backend response:", response.data);
-
-      const userId = response.data.user?._id; // Adjust according to backend response
-      if (userId) {
-        localStorage.setItem("userId", userId);
-        console.log("User ID stored:", userId);
-      }
-      
-      console.log("User successfully saved in database.");
+      console.log(response);
+      localStorage.setItem("userId", response.data.user?._id);
+      console.log("user id", response.data.user?._id);
       navigate("/profile");
     } catch (error) {
       console.error("Error saving user to backend:", error);
       throw error;
+    }
+  };
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await setPersistence(
+        auth,
+        rememberMe ? browserLocalPersistence : browserSessionPersistence
+      );
+
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      if (!user.emailVerified) {
+        setShowModal(true);
+        return;
+      }
+
+      await sendUserToBackend(user);
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(handleFirebaseError(error));
+      } else {
+        setError("An unknown error occurred.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,13 +106,18 @@ const SignUp = () => {
     setLoading(true);
 
     try {
+      await setPersistence(
+        auth,
+        rememberMe ? browserLocalPersistence : browserSessionPersistence
+      );
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      const newUser = userCredential.user;
-      await sendEmailVerification(newUser);
+      const user = userCredential.user;
+      await sendEmailVerification(user);
       setShowModal(true);
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -92,18 +130,49 @@ const SignUp = () => {
     }
   };
 
-  const handleGoToProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSocialAuth = async (provider: any) => {
+    try {
+      await setPersistence(
+        auth,
+        rememberMe ? browserLocalPersistence : browserSessionPersistence
+      );
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      await sendUserToBackend(user);
+      navigate("/profile");
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(handleFirebaseError(error));
+      } else {
+        setError("An unknown error occurred.");
+      }
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    try {
+      await sendPasswordResetEmail(auth, resetEmail);
+      setModalSuccess("Password reset email sent successfully!");
+      setShowResetModal(false);
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setModalError(handleFirebaseError(error));
+      }
+    }
+  };
+
+  const handleGoToProfile = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setModalError("");
     setLoading(true);
 
     try {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        throw new Error("No user found. Please sign up first.");
+      const user = auth.currentUser;
+      if (!user) {
+        throw new Error("No user found. Please sign up/sign in first.");
       }
 
-      await currentUser.reload();
+      await user.reload();
       const updatedUser = auth.currentUser;
 
       if (!updatedUser?.emailVerified) {
@@ -125,22 +194,6 @@ const SignUp = () => {
       setModalError(errorMessage);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleSocialSignUp = async (provider: any) => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      await sendUserToBackend(user);
-      navigate("/profile");
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        setError(handleFirebaseError(error));
-      } else {
-        setError("An unknown error occurred.");
-      }
     }
   };
 
@@ -191,41 +244,25 @@ const SignUp = () => {
       setLoading(false);
     }
   };
-  // Add this useEffect at the bottom of your component (before return)
 
-  useEffect(() => {
-    const checkAuthState = async () => {
-      try {
-        const user = auth.currentUser;
-        if (user) {
-          await user.reload(); // Reload user data to get the latest status
-          const updatedUser = auth.currentUser; // Get the updated user reference
-
-          if (updatedUser && updatedUser.emailVerified) {
-            await sendUserToBackend(updatedUser);
-            navigate("/profile");
-          }
-        }
-      } catch (error) {
-        console.error("Auth state check error:", error);
-      }
-    };
-
-    checkAuthState();
-  }, [navigate]);
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
         <h2 className="text-3xl font-bold text-gray-800 mb-2">
-          Create Your Account
+          {isSignUp ? "Create Your Account" : "Welcome Back!"}
         </h2>
-        <p className="text-gray-600 mb-6">Start Your Hosting Experience</p>
+        <p className="text-gray-600 mb-6">
+          {isSignUp ? "Start Your Hosting Experience" : "Continue Your Journey"}
+        </p>
 
         {error && (
           <p className="bg-red-100 text-red-700 p-3 rounded-lg mb-4">{error}</p>
         )}
 
-        <form onSubmit={handleSignUp} className="space-y-4">
+        <form
+          onSubmit={isSignUp ? handleSignUp : handleSignIn}
+          className="space-y-4"
+        >
           <input
             type="email"
             placeholder="Enter your email"
@@ -236,18 +273,40 @@ const SignUp = () => {
           />
           <input
             type="password"
-            placeholder="Create a strong password"
+            placeholder={isSignUp ? "Create a password" : "Enter your password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           />
+
+          <div className="flex justify-between items-center">
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 text-[#FFBC20] rounded focus:ring-[#FFBC20]"
+              />
+              <span className="text-gray-600">Remember me</span>
+            </label>
+            {!isSignUp && (
+              <button
+                type="button"
+                onClick={() => setShowResetModal(true)}
+                className="text-gray-600 hover:text-[#FFBC20] hover:underline"
+              >
+                Forgot Password?
+              </button>
+            )}
+          </div>
+
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-[#FFBC20] text-black p-3 rounded-lg hover:bg-[#FFA500] disabled:bg-[#FFD773] transition-colors font-semibold"
           >
-            {loading ? "Creating Account..." : "Sign Up"}
+            {loading ? "Processing..." : isSignUp ? "Sign Up" : "Sign In"}
           </button>
         </form>
 
@@ -259,14 +318,14 @@ const SignUp = () => {
 
         <div className="space-y-3">
           <button
-            onClick={() => handleSocialSignUp(googleProvider)}
+            onClick={() => handleSocialAuth(googleProvider)}
             className="w-full flex items-center justify-center gap-2 bg-white border text-gray-700 p-3 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <img src="/google-icon.png" alt="google icon" className="w-6 h-6" />
-            Sign Up with Google
+            Continue with Google
           </button>
           <button
-            onClick={() => handleSocialSignUp(facebookProvider)}
+            onClick={() => handleSocialAuth(facebookProvider)}
             className="w-full flex items-center justify-center gap-2 bg-[#1877F2] text-white p-3 rounded-lg hover:bg-[#166FE5] transition-colors"
           >
             <img
@@ -274,21 +333,22 @@ const SignUp = () => {
               alt="facebook icon"
               className="w-6 h-6"
             />
-            Sign Up with Facebook
+            Continue with Facebook
           </button>
         </div>
 
         <p className="text-center mt-6 text-gray-600">
-          Already have an account?{" "}
-          <a href="/signin" className="text-[#FFBC20] hover:underline">
-            Log in
-          </a>
+          {isSignUp ? "Already have an account? " : "Don't have an account? "}
+          <button
+            onClick={() => setIsSignUp(!isSignUp)}
+            className="text-[#FFBC20] hover:underline"
+          >
+            {isSignUp ? "Log in" : "Sign Up"}
+          </button>
         </p>
-
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl p-6 w-full max-w-md relative">
-              {/* Error messages */}
               {modalError && (
                 <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg relative">
                   <button
@@ -301,7 +361,6 @@ const SignUp = () => {
                 </div>
               )}
 
-              {/* Success messages */}
               {modalSuccess && (
                 <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg relative">
                   <button
@@ -354,9 +413,40 @@ const SignUp = () => {
             </div>
           </div>
         )}
+
+        {/* Add password reset modal */}
+        {showResetModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md relative">
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                &times;
+              </button>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                Reset Password
+              </h2>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                className="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <button
+                onClick={handlePasswordReset}
+                className="w-full p-3 bg-[#FFBC20] text-black rounded-lg hover:bg-[#FFA500] transition-colors font-semibold"
+              >
+                Send Reset Link
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default SignUp;
+export default AuthPage;

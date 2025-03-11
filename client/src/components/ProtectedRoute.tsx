@@ -11,7 +11,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   // If no user is logged in, redirect to the sign-in page
   if (!currentUser) {
-    return <Navigate to="/signin" />;
+    return <Navigate to="/" />;
   }
 
   // If the user is logged in, render the children (protected content)

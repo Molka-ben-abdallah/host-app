@@ -3,20 +3,18 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Profile from "./components/authentification/Profile"; // Import the Profile component
 import ProfileInfo from "./pages/ProfileInfo";
 import ProfilePhoto from "./pages/ProfilePhoto";
-import SignUp from "./components/authentification/SignUp";
-import SignIn from "./components/authentification/SignIn";
 import Landing from "./pages/Landing";
 import Location from "./pages/Location";
 import Passions from "./pages/Passions";
 import Languages from "./pages/Languages";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
+        <Route path="/" element={<AuthPage />} />
         <Route
           path="/profile"
           element={

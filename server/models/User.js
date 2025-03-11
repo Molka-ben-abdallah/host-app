@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema(
       city: { type: String, index: true },
       address: { type: String },
       localYears: { type: Number, min: 0 },
-      city_trait: { type: String, maxlength: 50 },
+      cityTrait: { type: String, maxlength: 50 },
     },
     languages: [
       {
@@ -52,10 +52,10 @@ const UserSchema = new mongoose.Schema(
     passions: { type: [String], maxlength: 50 },
     description: { type: String, maxlength: 200 },
     onboarding: {
-      hosted_before: { type: String },
-      guide_license: { type: String },
-      host_impact: { type: String },
-      character_type: { type: String },
+      hostedBefore: { type: String },
+      guideLicense: { type: String },
+      hostImpact: { type: String },
+      characterType: { type: String },
     },
     role: {
       type: String,

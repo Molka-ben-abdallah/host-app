@@ -14,15 +14,15 @@ const Profile = () => {
   // Redirect if not logged in
   useEffect(() => {
     if (!currentUser) {
-      console.log("user logged in");
-      navigate("/signin");
+      console.log("user logged out");
+      navigate("/");
     }
   }, [currentUser, navigate]);
-
+  
   const handleLogout = async () => {
     await signOut(auth);
     console.log("user logged out");
-    navigate("/signin");
+    navigate("/");
   };
   const handleChangePassword = async () => {
     if (auth.currentUser) {
