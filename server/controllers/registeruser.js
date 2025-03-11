@@ -44,11 +44,13 @@ const registerUser = async (req, res) => {
       name,
       picture,
     });
-
+    console.log("New user registered with ID:", user._id);
     res.status(201).json({
       message: "User registered successfully",
+      userId: user._id,
       user,
     });
+    console.log("New User ID:", user._id);
   } catch (error) {
     console.error("Error verifying token:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
