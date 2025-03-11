@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  onAuthStateChanged,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithPopup,
@@ -14,6 +13,7 @@ import {
 import { FirebaseError } from "firebase/app";
 import { handleFirebaseError } from "../../utils/firebaseErrorHandler";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const API_BASE_URL = "http://localhost:5000/api/auth";
 
@@ -26,14 +26,17 @@ const SignUp = () => {
   const navigate = useNavigate();
   const [cooldown, setCooldown] = useState(0);
   const [modalError, setModalError] = useState("");
+  const [modalSuccess, setModalSuccess] = useState("");
+  const { currentUser } = useAuth();
+
   const sendUserToBackend = async (user: any) => {
     try {
       const token = await user.getIdToken();
       const userData = {
         uid: user.uid,
         email: user.email,
-        name: user.displayName || "",
-        picture: user.photoURL || "",
+        name: user.name || "" || user.displayname,
+        photoUrl: user.picture || "" || user.photoUrl,
       };
 
       await axios.post(`${API_BASE_URL}/register`, userData, {
@@ -85,18 +88,22 @@ const SignUp = () => {
       const updatedUser = auth.currentUser;
 
       if (!updatedUser?.emailVerified) {
-        setError("Please verify your email before proceeding to your profile.");
+        setModalError(
+          "Please verify your email before proceeding to your profile."
+        );
         return;
       }
 
       await sendUserToBackend(updatedUser);
       navigate("/profile");
     } catch (error) {
+      let errorMessage = "An unknown error occurred.";
       if (error instanceof FirebaseError) {
-        setError(handleFirebaseError(error));
-      } else {
-        setError("An unknown error occurred.");
+        errorMessage = handleFirebaseError(error);
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
       }
+      setModalError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -120,22 +127,25 @@ const SignUp = () => {
 
   const handleResendEmail = async () => {
     setModalError("");
+    setModalSuccess("");
     const user = auth.currentUser;
+
     if (!user) {
-      alert("No authenticated user found. Please sign in again.");
+      setModalError("No authenticated user found. Please sign in again.");
       return;
     }
+
     try {
       setLoading(true);
-      await user.reload(); // Refresh user data
+      await user.reload();
 
       if (user.emailVerified) {
-        alert("Email is already verified!");
+        setModalError("Email is already verified!");
         return;
       }
 
       await sendEmailVerification(user);
-      setCooldown(60); // 60 seconds cooldown
+      setCooldown(60);
       const interval = setInterval(() => {
         setCooldown((prev) => {
           if (prev <= 1) clearInterval(interval);
@@ -143,7 +153,9 @@ const SignUp = () => {
         });
       }, 1000);
 
-      alert("Verification email resent successfully! Please check your inbox.");
+      setModalSuccess(
+        "Verification email resent successfully! Please check your inbox."
+      );
     } catch (error) {
       console.error("Error resending verification email:", error);
       let errorMessage = "Failed to resend email. Please try again later.";
@@ -155,11 +167,33 @@ const SignUp = () => {
         }
       }
 
-      alert(errorMessage);
+      setModalError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
+  // Add this useEffect at the bottom of your component (before return)
+
+  useEffect(() => {
+    const checkAuthState = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          await user.reload(); // Reload user data to get the latest status
+          const updatedUser = auth.currentUser; // Get the updated user reference
+
+          if (updatedUser && updatedUser.emailVerified) {
+            await sendUserToBackend(updatedUser);
+            navigate("/profile");
+          }
+        }
+      } catch (error) {
+        console.error("Auth state check error:", error);
+      }
+    };
+
+    checkAuthState();
+  }, [navigate]);
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
@@ -235,11 +269,30 @@ const SignUp = () => {
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl p-6 w-full max-w-md relative">
-              {/* Modal error display */}
+              {/* Error messages */}
               {modalError && (
-                <p className="bg-red-100 text-red-700 p-3 rounded-lg mb-4">
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg relative">
+                  <button
+                    onClick={() => setModalError("")}
+                    className="absolute top-2 right-2 text-red-700 hover:text-red-900"
+                  >
+                    ×
+                  </button>
                   {modalError}
-                </p>
+                </div>
+              )}
+
+              {/* Success messages */}
+              {modalSuccess && (
+                <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg relative">
+                  <button
+                    onClick={() => setModalSuccess("")}
+                    className="absolute top-2 right-2 text-green-700 hover:text-green-900"
+                  >
+                    ×
+                  </button>
+                  {modalSuccess}
+                </div>
               )}
 
               <button

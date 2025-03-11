@@ -1,26 +1,21 @@
-import { JSX, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "../config/firebaseConfig";
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 interface ProtectedRouteProps {
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-      if (user) {
-        navigate("/profile"); 
-      }
-    });
+  // If no user is logged in, redirect to the sign-in page
+  if (!currentUser) {
+    return <Navigate to="/signin" />;
+  }
 
-    return () => unsubscribe();
-  }, [navigate]);
-
-  return children;
+  // If the user is logged in, render the children (protected content)
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

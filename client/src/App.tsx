@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import ProfilePhoto from "./pages/ProfilePhoto";
 import SignUp from "./components/authentification/SignUp";
 import SignIn from "./components/authentification/SignIn";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -12,7 +13,15 @@ function App() {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/profile-information" element={<Home />} />
         <Route path="/profile-photo" element={<ProfilePhoto />} />
       </Routes>

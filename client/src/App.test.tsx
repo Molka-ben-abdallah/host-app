@@ -1,14 +1,14 @@
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { render, screen, waitFor } from "@testing-library/react";
+import App from "./App";
 //import { getTest } from './functions/apiTest';
 
 // Mock the getTest function
-jest.mock('./functions/apiTest', () => ({
+jest.mock("./functions/apiTest", () => ({
   getTest: jest.fn(),
 }));
 
-test('renders the initial text and updates after API call', async () => {
+test("renders the initial text and updates after API call", async () => {
   // Mock the resolved value of getTest
   //(getTest as jest.Mock).mockResolvedValue({ message: 'Updated text' });
 

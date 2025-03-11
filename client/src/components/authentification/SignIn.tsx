@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -17,6 +17,7 @@ import {
 import "../../App.css";
 import { FirebaseError } from "firebase/app";
 import { handleFirebaseError } from "../../utils/firebaseErrorHandler";
+import { useAuth } from "../../context/AuthContext";
 
 const API_BASE_URL = "http://localhost:5000/api/auth";
 
@@ -30,8 +31,8 @@ const SignIn = () => {
   const [resetEmail, setResetEmail] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const sendUserToBackend = async (user: any) => {
     try {
@@ -39,8 +40,8 @@ const SignIn = () => {
       const userData = {
         uid: user.uid,
         email: user.email,
-        name: user.displayName || "",
-        picture: user.photoURL || "",
+        name: user.name || "" || user.displayname,
+        photoUrl: user.picture || "" || user.photoUrl,
       };
 
       await axios.post(`${API_BASE_URL}/register`, userData, {
@@ -120,6 +121,12 @@ const SignIn = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/profile");
+    }
+  }, [currentUser, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
