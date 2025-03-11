@@ -13,14 +13,14 @@ const createProfile = async (req, res) => {
 const updateLocation = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { country, city, local_years, address } = req.body;
+        const { country, city, localYears, address } = req.body;
 
-        console.log('Received Data:', { userId, country, city, local_years, address });
+        console.log('Received Data:', { userId, country, city, localYears, address });
 
         // Find the user by ID and update their location
         const user = await User.findByIdAndUpdate(
             userId,
-            { location: { country, city, local_years, address } },
+            { location: { country, city, localYears, address } },
             { new: true, runValidators: true }
         );
 

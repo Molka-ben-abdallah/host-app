@@ -81,3 +81,6 @@ input {
 .form{
   @apply  w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 mx-auto my-10 px-4 sm:px-0;
 }
+.error{
+  @apply text-red-500 font-primaryMedium flex items-center justify-center;
+}

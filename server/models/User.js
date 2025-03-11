@@ -28,25 +28,27 @@ const UserSchema = new mongoose.Schema({
     type: String,
     match: [/^\+?\d{4,15}$/, "Please enter a valid mobile number"],
   },
-  profile_photo: { type: String },
+   photoUrl: { type: String },
   location: {
     country: { type: String, index: true },
     city: { type: String, index: true },
-    local_years: { type: Number, min: 0 },
+    localYears: { type: Number, min: 0 },
     address: { type: String },
+    city_trait: { type: String, maxlength: 50 },
   },
-  languages: {
-    name: { type: [String] },
-    english_level: {
-      type: String,
-      enum: ["A1", "A2", "B1", "B2", "C1", "C2", "native"],
+  languages: [
+    {
+      name: { type: String, required: true },
+      level: {
+        type: String,
+        enum: ["A1", "A2", "B1", "B2", "C1", "C2", "native"],
+        required: true,
+      },
     },
-  },
-  passion: {
-    interest: { type: String, maxlength: 50 },
-    city_favorite: { type: String, maxlength: 50 },
-    description: { type: String, maxlength: 200 },
-  },
+  ],
+
+  passions: { type: [String], maxlength: 50 },
+  description: { type: String, maxlength: 200 },
   onboarding: {
     hosted_before: { type: String },
     guide_license: { type: String },
@@ -59,11 +61,10 @@ const UserSchema = new mongoose.Schema({
     enum: ["pending", "approved", "rejected"],
     default: "pending",
   },
-  createdAt: { type: Date, default: Date.now },
-});
+}, {timestamps: true,});
 
-UserSchema.index({ first_name: 1, last_name: 1 }); // Compound index for faster lookup on first_name + last_name
-UserSchema.index({ "location.city": 1, "location.country": 1 }); // Compound index for city + country in location
+UserSchema.index({ firstName: 1, lastName: 1 });
+UserSchema.index({ "location.city": 1, "location.country": 1 });
 UserSchema.index({ status: 1, createdAt: -1 });
 
 const User = mongoose.model("User", UserSchema);
