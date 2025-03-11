@@ -40,7 +40,7 @@ const Profile = () => {
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="w-full bg-white py-4 px-6 shadow-md flex justify-between items-center rounded-b-xl">
-        <img src="/black logo.png" alt="Logo" className="h-14" />
+        <img src="/blackLogo.png" alt="Logo" className="h-14" />
         <div className="flex items-center space-x-3">
           {/* User Initial with Background Color */}
           <div className="w-10 h-10 bg-[#10455B] text-white flex items-center justify-center rounded-full font-bold">
@@ -57,13 +57,8 @@ const Profile = () => {
           >
             Change Password
           </button>
-
-          {/* Logout Button with Icon */}
-          <button
-            onClick={handleLogout}
-            className="bg-transparent hover:opacity-80"
-          >
-            <img src="/logout.png" alt="Logout" className="w-6 h-6" />
+          <button className="logout" onClick={handleLogout}>
+            Logout
           </button>
         </div>
       </header>
@@ -112,23 +107,13 @@ const Profile = () => {
               className="w-full mt-4 p-2 border rounded-lg"
               onChange={(e) => setNewPassword(e.target.value)}
             />
-            <div className="flex justify-between mt-4">
-              <button
-                className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600"
-                onClick={handleChangePassword}
-              >
-                Update Password
-              </button>
-              <button
-                className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600"
-                onClick={() => setShowChangePasswordModal(false)}
-              >
-                Cancel
-              </button>
-            </div>
-            {successMessage && (
-              <p className="text-green-500 mt-2">{successMessage}</p>
-            )}
+            <button onClick={handleChangePassword}>Update Password</button>
+            <button
+              className="close-modal"
+              onClick={() => setShowChangePasswordModal(false)}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}

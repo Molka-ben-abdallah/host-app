@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
 
+const profileRoutes = require('./routes/profileRoutes');
 //const cors = require("cors"); app.use(cors({ origin: "*" }));
 // app
 const app = express();
@@ -18,9 +19,11 @@ mongoose
 app.use(morgan("dev"));
 app.use(cors({ origin: true, credentials: true }));
 
+app.use(express.json()); 
 //routes
 const authRoutes = require("./routes/authRoutes");
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use('/api', profileRoutes);
 
 // Use routes
 //port

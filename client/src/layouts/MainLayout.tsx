@@ -9,6 +9,7 @@ interface MainLayoutProps {
   title: string;
   tip: string;
   nextPage: string;
+  validateForm?: () => boolean;
 }
 
 const steps = [
@@ -18,7 +19,7 @@ const steps = [
   { path: "/languages", title: "Languages" },
 ];
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children, title, tip, nextPage }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children, title, tip, nextPage, validateForm  }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -46,23 +47,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title, tip, nextPage 
 
   return (
     <div className="flex ">
-      {/* Sidebar with navigation control */}
-      <Sidebar
-        /*goToStep={goToStep}
-        currentStepIndex={currentStepIndex}
-        steps={steps}*/
-        
-      />
+      <Sidebar/>
 
       <div className="flex flex-col flex-1 p-4">
         <Tips title={title} text={tip} />
-        <main>{children}</main>
+        <main >{children}</main>
         
         <div className="mt-auto self-end">
-        {/* Only show the button if there's a next step */}
-        {currentStepIndex < steps.length - 1 && (
-          <Button nextPage={nextPage} formId="profileForm" />
-        )}
+          <Button nextPage={nextPage} formId="formId" validateForm={validateForm} />
         </div>
       </div>
       

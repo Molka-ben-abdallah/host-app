@@ -6,7 +6,7 @@ const Landing = () => {
     <div className="flex flex-col md:flex-row h-screen">
       {/* Left Section */}
       <div className="md:w-1/2 flex flex-col justify-center px-8">
-        <img src="/blackLogo.png" alt="Logo" className="âbsolute top-4 left-4 w-16 pb-5" />
+        <img src="/blackLogo.png" alt="Logo" className=" top-4 left-4 w-16 pb-5" />
         <h1 className="font-primaryBold text-3xl md:text-4xl">
           Welcome! <br /> Your hosting journey starts here.
         </h1>

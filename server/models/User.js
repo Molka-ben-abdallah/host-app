@@ -74,6 +74,8 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.index({ firstName: 1, lastName: 1 });
 UserSchema.index({ "location.city": 1, "location.country": 1 });
+UserSchema.index({ firstName: 1, lastName: 1 });
+UserSchema.index({ "location.city": 1, "location.country": 1 });
 UserSchema.index({ status: 1, createdAt: -1 });
 
 const User = mongoose.model("User", UserSchema);
