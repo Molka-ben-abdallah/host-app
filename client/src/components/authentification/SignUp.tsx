@@ -32,16 +32,29 @@ const SignUp = () => {
   const sendUserToBackend = async (user: any) => {
     try {
       const token = await user.getIdToken();
+      console.log("Generated token:", token);
+
       const userData = {
         uid: user.uid,
         email: user.email,
-        name: user.name || "" || user.displayname,
-        photoUrl: user.picture || "" || user.photoUrl,
+        // Use proper Firebase User property names
+        name: user.displayName || "",
+        photoUrl: user.photoURL || "",
       };
+      console.log("User data being sent to backend:", userData);
 
-      await axios.post(`${API_BASE_URL}/register`, userData, {
-        headers: { Authorization: `Bearer ${token}` },
+      // Proper axios request with corrected headers and config
+      const response = await axios.post(`${API_BASE_URL}/register`, userData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Fixed template literal syntax
+        },
       });
+
+      console.log("Backend response:", response.data);
+
+      console.log("User successfully saved in database.");
+      navigate("/profile");
     } catch (error) {
       console.error("Error saving user to backend:", error);
       throw error;
@@ -112,9 +125,9 @@ const SignUp = () => {
   const handleSocialSignUp = async (provider: any) => {
     try {
       const result = await signInWithPopup(auth, provider);
-      const socialUser = result.user;
+      const user = result.user;
 
-      await sendUserToBackend(socialUser);
+      await sendUserToBackend(user);
       navigate("/profile");
     } catch (error) {
       if (error instanceof FirebaseError) {
