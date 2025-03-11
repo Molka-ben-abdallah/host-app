@@ -18,11 +18,14 @@ const Profile = () => {
       navigate("/");
     }
   }, [currentUser, navigate]);
-  
+
   const handleLogout = async () => {
-    await signOut(auth);
-    console.log("user logged out");
-    navigate("/");
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
   const handleChangePassword = async () => {
     if (auth.currentUser) {

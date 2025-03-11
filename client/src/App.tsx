@@ -1,6 +1,13 @@
+// App.tsx
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Profile from "./components/authentification/Profile"; // Import the Profile component
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useAuth } from "./context/AuthContext"; // Import useAuth
+import Profile from "./components/authentification/Profile";
 import ProfileInfo from "./pages/ProfileInfo";
 import ProfilePhoto from "./pages/ProfilePhoto";
 import Landing from "./pages/Landing";
@@ -11,15 +18,24 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthPage from "./pages/AuthPage";
 
 function App() {
+  const { currentUser } = useAuth(); // Get the current user from the auth context
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<AuthPage />} />
+        {/* Redirect to /profile if the user is already logged in */}
+        <Route
+          path="/"
+          element={
+            currentUser ? <Navigate to="/profile" replace /> : <AuthPage />
+          }
+        />
+        {/* Protected Routes */}
         <Route
           path="/profile"
           element={
             <ProtectedRoute>
-              <Profile />{" "}
+              <Profile />
             </ProtectedRoute>
           }
         />
@@ -27,7 +43,7 @@ function App() {
           path="/profile-information"
           element={
             <ProtectedRoute>
-              <ProfileInfo />{" "}
+              <ProfileInfo />
             </ProtectedRoute>
           }
         />
@@ -35,7 +51,7 @@ function App() {
           path="/profile-photo"
           element={
             <ProtectedRoute>
-              <ProfilePhoto />{" "}
+              <ProfilePhoto />
             </ProtectedRoute>
           }
         />
@@ -43,7 +59,7 @@ function App() {
           path="/location"
           element={
             <ProtectedRoute>
-              <Location />{" "}
+              <Location />
             </ProtectedRoute>
           }
         />
@@ -51,15 +67,15 @@ function App() {
           path="/languages"
           element={
             <ProtectedRoute>
-              <Languages />{" "}
+              <Languages />
             </ProtectedRoute>
           }
-        />{" "}
+        />
         <Route
           path="/passions"
           element={
             <ProtectedRoute>
-              <Passions />{" "}
+              <Passions />
             </ProtectedRoute>
           }
         />
