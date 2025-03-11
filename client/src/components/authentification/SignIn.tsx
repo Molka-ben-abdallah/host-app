@@ -58,6 +58,12 @@ const SignIn = () => {
 
       console.log("Backend response:", response.data);
 
+      const userId = response.data.user?._id; // Adjust according to backend response
+      if (userId) {
+        localStorage.setItem("userId", userId);
+        console.log("User ID stored:", userId);
+      }
+      
       console.log("User successfully saved in database.");
       navigate("/profile");
     } catch (error) {

@@ -19,10 +19,10 @@ const Sidebar: React.FC = () => {
   return (
     <>
       <button 
-        className="md:hidden fixed top-4 left-4 bg-[#FFAF20] hover:bg-[#e68a00] text-white p-2 rounded z-50"
+        className="md:hidden fixed top-4 left-4 p-2  z-50"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? 'Close' : 'Menu'}
+        {isOpen ? <img src="white.svg" alt="" height={20} width={20} /> :  <img src="blue.svg" alt=""  width={20}/>}
       </button>
 
       <aside 

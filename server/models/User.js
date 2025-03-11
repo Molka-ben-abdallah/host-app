@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema(
       country: { type: String, index: true },
       city: { type: String, index: true },
       address: { type: String },
-      local_years: { type: Number, min: 0 },
+      localYears: { type: Number, min: 0 },
       city_trait: { type: String, maxlength: 50 },
     },
     languages: [

@@ -58,7 +58,7 @@ const Profile = () => {
             Change Password
           </button>
           <button className="logout" onClick={handleLogout}>
-            Logout
+          <img src="/logout.png" alt="Logout" className="w-6 h-6" />
           </button>
         </div>
       </header>
