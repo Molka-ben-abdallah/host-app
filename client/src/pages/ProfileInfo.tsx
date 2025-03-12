@@ -1,27 +1,30 @@
-import React, { useState ,useRef, useEffect } from 'react';
-import MainLayout from '../layouts/MainLayout';
-import Input from '../components/Input';
+import React, { useState, useRef, useEffect } from "react";
+import MainLayout from "../layouts/MainLayout";
+import Input from "../components/Input";
 
 const ProfileInfo: React.FC = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [birthday, setBirthday] = useState('');
-  const [nationality, setNationality] = useState('');
-  const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const formRef = useRef<HTMLFormElement>(null);
-   useEffect(() => {
-          const userId = localStorage.getItem('userId');
-  
-          if (!userId) {
-              console.error("User ID is not available.");
-              return; // Prevent API call if no userId
-          }
-      }, []);
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
+    if (!userId) {
+      console.error("User ID is not available.");
+      return; // Prevent API call if no userId
+    }
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setInput: React.Dispatch<React.SetStateAction<string>>
+  ) => {
     setInput(e.target.value);
   };
 
@@ -67,40 +70,42 @@ const ProfileInfo: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (formRef.current?.checkValidity()&& validateForm()) {
+
+    if (formRef.current?.checkValidity() && validateForm()) {
       const formData = {
         firstName,
         lastName,
         birthday,
         nationality,
         email,
-        mobile
+        mobile,
       };
 
       try {
-        const userId = localStorage.getItem('userId');
-        const response = await fetch(`http://localhost:5000/api/profile/${userId}/profileInfo`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+        const userId = localStorage.getItem("userId");
+        const response = await fetch(
+          `http://localhost:5000/api/profile/${userId}/profileInfo`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          }
+        );
 
         if (!response.ok) {
-          throw new Error('Failed to submit form');
+          throw new Error("Failed to submit form");
         }
 
         const data = await response.json();
-        console.log('Form submitted successfully:', data);
+        console.log("Form submitted successfully:", data);
       } catch (error) {
-        console.error('Error submitting form:', error);
-        setErrorMessage('Error submitting form');
+        console.error("Error submitting form:", error);
+        setErrorMessage("Error submitting form");
       }
     } else {
       formRef.current?.reportValidity();
     }
   };
-  
 
   return (
     <div>
@@ -110,62 +115,63 @@ const ProfileInfo: React.FC = () => {
         nextPage="/profile-photo"
         validateForm={validateForm}
       >
-        {errorMessage && <div className='error'>{errorMessage}</div>}
-        <div className='flex justify-center'>
-        <form className=" w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 my-10 px-4 sm:px-0"
-           id="formId" ref={formRef}
-           onSubmit={handleSubmit}
-        >
-          <Input
-            label="First Name"
-            type="text"
-            value={firstName}
-            onChange={(e) => handleChange(e, setFirstName)}
-            placeholder="Enter your first name"
-            required={true}
-          />
-          <Input
-            label="Last Name"
-            type="text"
-            value={lastName}
-            onChange={(e) => handleChange(e, setLastName)}
-            placeholder="Enter your last name"
-            required={true}
-          />
-          <Input
-            label="Birthday"
-            type="date"
-            value={birthday}
-            onChange={(e) => handleChange(e, setBirthday)}
-            placeholder=""
-            required={true}
-          />
-          <Input
-            label="Nationality"
-            type="text"
-            value={nationality}
-            onChange={(e) => handleChange(e, setNationality)}
-            placeholder="Enter your nationality"
-            required={true}
-          />
-          <Input
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => handleChange(e, setEmail)}
-            placeholder="Enter your email"
-            required={true}
-          />
-          <Input
-            label="Mobile"
-            type="tel"
-            value={mobile}
-            onChange={(e) => handleChange(e, setMobile)}
-            placeholder="Enter your mobile number"
-            required={true}
-          />
-          
-        </form>
+        {errorMessage && <div className="error">{errorMessage}</div>}
+        <div className="flex justify-center">
+          <form
+            className=" w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 my-10 px-4 sm:px-0"
+            id="formId"
+            ref={formRef}
+            onSubmit={handleSubmit}
+          >
+            <Input
+              label="First Name"
+              type="text"
+              value={firstName}
+              onChange={(e) => handleChange(e, setFirstName)}
+              placeholder="Enter your first name"
+              required={true}
+            />
+            <Input
+              label="Last Name"
+              type="text"
+              value={lastName}
+              onChange={(e) => handleChange(e, setLastName)}
+              placeholder="Enter your last name"
+              required={true}
+            />
+            <Input
+              label="Birthday"
+              type="date"
+              value={birthday}
+              onChange={(e) => handleChange(e, setBirthday)}
+              placeholder=""
+              required={true}
+            />
+            <Input
+              label="Nationality"
+              type="text"
+              value={nationality}
+              onChange={(e) => handleChange(e, setNationality)}
+              placeholder="Enter your nationality"
+              required={true}
+            />
+            <Input
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => handleChange(e, setEmail)}
+              placeholder="Enter your email"
+              required={true}
+            />
+            <Input
+              label="Mobile"
+              type="tel"
+              value={mobile}
+              onChange={(e) => handleChange(e, setMobile)}
+              placeholder="Enter your mobile number"
+              required={true}
+            />
+          </form>
         </div>
       </MainLayout>
     </div>
