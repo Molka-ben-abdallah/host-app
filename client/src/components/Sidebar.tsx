@@ -28,7 +28,7 @@ const Sidebar: React.FC = () => {
       <aside 
         className={`bg-[#10455B] text-white h-screen max-md:fixed max-md:top-0 max-md:left-0 max-md:w-64 max-md:transition-transform max-md:duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
-        <img src="/logo.png" alt="Logo" className="mb-6 mx-auto" />
+        <img src="/logo.png" alt="Logo" className="my-7 mx-auto" />
         <h2 className="text-lg font-primaryBold mb-4 px-6">Your Hosting <br/>Application Process</h2>
         <nav>
           <ul>
