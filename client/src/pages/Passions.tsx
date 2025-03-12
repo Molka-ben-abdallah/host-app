@@ -6,7 +6,7 @@ const Passions = () => {
   const [passions, setPassions] = useState('');
   const [cityTrait, setCityTrait] = useState('');
   const [description, setDescription] = useState('');
-
+  const [errorMessage, setErrorMessage] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   
       // Log userId to ensure it is being fetched correctly
@@ -22,6 +22,25 @@ const Passions = () => {
   
       const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
           setInput(e.target.value);
+      };
+      const validateForm = () => {
+        setErrorMessage(""); // Reset errors before validation
+    
+        // First & Last Name Validation
+        if (passions.length > 50 ) {
+          setErrorMessage("The passio!");
+          return false;
+        }
+        if (cityTrait.length > 50) {
+          setErrorMessage("you can't pass 50 characters for the city Trait !");
+          return false;
+        }
+        if (description.length > 200) {
+          setErrorMessage("you can't pass 200 characters for the description !");
+          return false;
+        }
+    
+        return true;
       };
   
       const handleSubmit = async (e: React.FormEvent) => {

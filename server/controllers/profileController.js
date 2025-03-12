@@ -16,8 +16,6 @@ const updateProfile = async (req, res) => {
             nationality,
             email,
             mobile});
-
-        // Find the user by ID and update their location
         const user = await User.findByIdAndUpdate(
             userId,
             { firstName,
@@ -34,7 +32,7 @@ const updateProfile = async (req, res) => {
         }
 
         console.log('Updated User:', user);
-        res.status(200).json(user); // Respond with the updated user
+        res.status(200).json(user); 
     } catch (error) {
         console.error('Error updating location:', error);
         res.status(500).json({ message: 'Error updating location', error });
@@ -48,7 +46,6 @@ const updateLocation = async (req, res) => {
 
         console.log('Received Data:', { userId, country, city, localYears, address });
 
-        // Find the user by ID and update their location
         const user = await User.findByIdAndUpdate(
             userId,
             { location: { country, city, localYears, address } },
@@ -60,7 +57,7 @@ const updateLocation = async (req, res) => {
         }
 
         console.log('Updated User:', user);
-        res.status(200).json(user); // Respond with the updated user
+        res.status(200).json(user); 
     } catch (error) {
         console.error('Error updating location:', error);
         res.status(500).json({ message: 'Error updating location', error });

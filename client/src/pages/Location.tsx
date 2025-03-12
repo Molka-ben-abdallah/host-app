@@ -7,7 +7,7 @@ const Location = () => {
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [localYears, setLocalYears] = useState("");
-
+  const [errorMessage, setErrorMessage] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
   // Log userId to ensure it is being fetched correctly
@@ -28,10 +28,33 @@ const Location = () => {
     setInput(e.target.value);
   };
 
+  const validateForm = () => {
+    setErrorMessage(""); // Reset errors before validation
+
+    // First & Last Name Validation
+    if (city.length > 30 || city.length<3) {
+      setErrorMessage("Enter a valid city name !");
+      return false;
+    }
+    if (country.length > 30 || country.length<3) {
+      setErrorMessage("Enter a valid country !");
+      return false;
+    }
+    if (address.length > 30 || address.length<3) {
+      setErrorMessage("Enter a valid address !");
+      return false;
+    }
+    if (isNaN(Number(localYears)) || Number(localYears) <0  ) {
+      setErrorMessage("Enter a valid number of years !");
+      return false;
+    }
+
+    return true;
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formRef.current?.checkValidity()) {
+    if (formRef.current?.checkValidity() && validateForm()) {
       const locationData = {
         country: country,
         city: city,
@@ -73,46 +96,46 @@ const Location = () => {
         title="Location informations"
         tip="It’s important that guests can see your face. No company logos, favorite pets, blank images, etc. We can’t accept photos that don’t show the real you."
         nextPage="/languages"
+        validateForm={validateForm}
       >
-        <form
-          id="formId"
-          className="form gap-4"
-          ref={formRef}
-          onSubmit={handleSubmit}
-        >
-          <Input
-            label="Your country"
-            type="text"
-            value={country}
-            onChange={(e) => handleChange(e, setCountry)}
-            placeholder=""
-            required={true}
-          />
-          <Input
-            label="Your city name"
-            type="text"
-            value={city}
-            onChange={(e) => handleChange(e, setCity)}
-            placeholder=""
-            required={true}
-          />
-          <Input
-            label="How many years have you been living in it ?"
-            type="number"
-            value={localYears}
-            onChange={(e) => handleChange(e, setLocalYears)}
-            placeholder=""
-            required={true}
-          />
-          <Input
-            label="Address"
-            type="text"
-            value={address}
-            onChange={(e) => handleChange(e, setAddress)}
-            placeholder=""
-            required={true}
-          />
-        </form>
+        {errorMessage && <div className="error">{errorMessage}</div>}
+        <div  className="flex justify-center">
+          <form id='formId' className='w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 my-10 px-4 sm:px-0' ref={formRef} onSubmit={handleSubmit}>
+            <Input 
+                label='Your country'
+                type='text'
+                value={country}
+                onChange={(e) => handleChange(e, setCountry)}
+                placeholder=''
+                required={true}
+            />
+            <Input 
+                label='Your city name'
+                type='text'
+                value={city}
+                onChange={(e) => handleChange(e, setCity)}
+                placeholder=''
+                required={true}
+            />
+            <Input 
+                label='How many years have you been living in it ?'
+                type='number'
+                value={localYears}
+                onChange={(e) => handleChange(e, setLocalYears)}
+                placeholder=''
+                required={true}
+            />
+            <Input 
+                label='Address'
+                type='text'
+                value={address}
+                onChange={(e) => handleChange(e, setAddress)}
+                placeholder=''
+                required={true}
+            />
+          </form>
+        </div>
+        
       </MainLayout>
     </div>
   );
