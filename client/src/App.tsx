@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useAuth } from "./context/AuthContext"; // Import useAuth
-import Profile from "./components/authentification/Profile";
+import Profile from "./pages/Profile";
 import ProfileInfo from "./pages/ProfileInfo";
 import ProfilePhoto from "./pages/ProfilePhoto";
 import Landing from "./pages/Landing";

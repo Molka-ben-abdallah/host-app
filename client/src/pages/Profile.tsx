@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut, updatePassword } from "firebase/auth";
-import { auth } from "../../config/firebaseConfig";
-import { useAuth } from "../../context/AuthContext";
+import { auth } from "../config/firebaseConfig";
+import { useAuth } from "../context/AuthContext";
 
 const Profile = () => {
   const navigate = useNavigate();
