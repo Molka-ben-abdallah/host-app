@@ -51,24 +51,6 @@ input {
 .facebook-button {
   @apply bg-blue-600 text-white flex justify-center items-center gap-2 p-3 rounded-lg w-full hover:bg-blue-700;
 }
-.modal-overlay{
-  @apply fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center;
-}
-.modal{
-  @apply bg-white p-6 rounded-lg text-center w-80 shadow-lg;
-}
-.modal h2 {
-  @apply mb-4 text-2xl text-gray-800;
-}
-.modal input {
-  @apply w-full p-3 mb-4 border border-gray-300 rounded-lg text-base
-}
-.modal button{
-  @apply w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600
-}
-.modal .cancel-button {
-  @apply w-full bg-red-500 text-white p-3 rounded-lg mt-2 hover:bg-red-600
-}
 
 /* Style for text links */
 .link-style {
@@ -95,4 +77,11 @@ input {
 }
 .modal .cancel-button {
   @apply w-full bg-red-500 text-white p-3 rounded-lg mt-2 hover:bg-red-600;
+}
+
+.form{
+  @apply  w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 mx-auto my-10 px-4 sm:px-0;
+}
+.error{
+  @apply text-red-500 font-primaryMedium flex items-center justify-center;
 }

@@ -1,4 +1,4 @@
-import React, { useState ,useRef } from 'react';
+import React, { useState ,useRef, useEffect } from 'react';
 import MainLayout from '../layouts/MainLayout';
 import Input from '../components/Input';
 
@@ -12,6 +12,14 @@ const ProfileInfo: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const formRef = useRef<HTMLFormElement>(null);
+   useEffect(() => {
+          const userId = localStorage.getItem('userId');
+  
+          if (!userId) {
+              console.error("User ID is not available.");
+              return; // Prevent API call if no userId
+          }
+      }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
     setInput(e.target.value);
@@ -71,8 +79,9 @@ const ProfileInfo: React.FC = () => {
       };
 
       try {
-        const response = await fetch('http://localhost:5000/api/profile', {
-          method: 'POST',
+        const userId = localStorage.getItem('userId');
+        const response = await fetch(`http://localhost:5000/api/profile/${userId}/profileInfo`, {
+          method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         });
@@ -83,10 +92,6 @@ const ProfileInfo: React.FC = () => {
 
         const data = await response.json();
         console.log('Form submitted successfully:', data);
-        const userId = data.profile._id; // Make sure you're using the correct path for _id
-        console.log('user id:', userId);
-        localStorage.setItem('userId', userId);
-        window.location.reload();
       } catch (error) {
         console.error('Error submitting form:', error);
         setErrorMessage('Error submitting form');
