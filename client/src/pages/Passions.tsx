@@ -3,8 +3,8 @@ import MainLayout from '../layouts/MainLayout'
 import Input from '../components/Input';
 
 const Passions = () => {
-  const [interest, setInterest] = useState('');
-  const [cityFavorite, setCityFavorite] = useState('');
+  const [passions, setPassions] = useState('');
+  const [cityTrait, setCityTrait] = useState('');
   const [description, setDescription] = useState('');
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -12,11 +12,11 @@ const Passions = () => {
       // Log userId to ensure it is being fetched correctly
       useEffect(() => {
           const userId = localStorage.getItem('userId');
-          console.log('User ID retrieved from localStorage in Location:', userId);
+          console.log('User ID retrieved from localStorage in passion:', userId);
   
           if (!userId) {
               console.error("User ID is not available.");
-              return; // Prevent API call if no userId
+              return; 
           }
       }, []); // Empty dependency array ensures it runs only once when the component mounts
   
@@ -29,7 +29,9 @@ const Passions = () => {
           
           if (formRef.current?.checkValidity()) {
               const passionData = {
-                  
+                passions: passions,
+                description: description,
+                cityTrait: cityTrait,
               };            
   
               console.log('passion data:', passionData);
@@ -61,39 +63,44 @@ const Passions = () => {
         <MainLayout
         title="Passion"
         tip="What makes you uniquely qualified to host experiences? Tell guests why you’re passionate and knowledgeable about the subject matter. Keep in mind: Hosting is about person-to-person connection, so make sure this section focuses on you"
-        nextPage="/overview"
+        nextPage="/profile-information"
       >
-        <form className="flex flex-col items-center"
+        <div className='flex justify-center'>
+        <form className="w-full max-w-4xl grid grid-cols-1 my-5 px-4 sm:px-0"
            id="formId" ref={formRef}
            onSubmit={handleSubmit}
         >
             <Input 
               label='what are you passionate about ?'
               type='text'
-              value={interest}
-              onChange={(e) => handleChange(e, setInterest)}
+              value={passions}
+              onChange={(e) => handleChange(e, setPassions)}
               placeholder=''
               required={true}
             />
             <Input 
                 label='what do you love most about your city ?'
                 type='text'
-                value={cityFavorite}
-                onChange={(e) => handleChange(e, setCityFavorite)}
+                value={cityTrait}
+                onChange={(e) => handleChange(e, setCityTrait)}
                 placeholder=''
                 required={true}
             />
-            <label htmlFor="description" className='block text-gray-700 font-primaryRegular'>Describe yourself more:</label>
-            <textarea className='w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:border-[#FFAF20] focus:ring-1 focus:ring-[#FFAF20] transition-all outline-none resize-none my-2'
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={5}
-                cols={50}
-                placeholder=""
-                required
-            />
+            
+            <div className='px-8'>
+                <label htmlFor="description" className='block text-gray-700 font-primaryRegular'>Describe yourself more:</label>
+                <textarea className='w-full font-primaryRegular justify-center w-100 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#FFAF20]'
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={5}
+                    cols={20}
+                    placeholder=""
+                    required
+                />
+            </div>
           </form>
+        </div>
         </MainLayout>
     </div>
   )
