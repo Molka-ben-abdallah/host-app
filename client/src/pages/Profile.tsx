@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut, updatePassword } from "firebase/auth";
-import { auth } from "../../config/firebaseConfig";
-import { useAuth } from "../../context/AuthContext";
-import Button from "../Button";
+import { auth } from "../config/firebaseConfig";
+import { useAuth } from "../context/AuthContext";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -15,15 +14,18 @@ const Profile = () => {
   // Redirect if not logged in
   useEffect(() => {
     if (!currentUser) {
-      console.log("user logged in");
-      navigate("/signin");
+      console.log("user logged out");
+      navigate("/");
     }
   }, [currentUser, navigate]);
 
   const handleLogout = async () => {
-    await signOut(auth);
-    console.log("user logged out");
-    navigate("/signin");
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
   const handleChangePassword = async () => {
     if (auth.currentUser) {
@@ -58,8 +60,13 @@ const Profile = () => {
           >
             Change Password
           </button>
-          <button className="logout" onClick={handleLogout}>
-          <img src="/logout.png" alt="Logout" className="w-6 h-6" />
+
+          {/* Logout Button with Icon */}
+          <button
+            onClick={handleLogout}
+            className="bg-transparent hover:opacity-80"
+          >
+            <img src="/logout.png" alt="Logout" className="w-6 h-6" />
           </button>
         </div>
       </header>
@@ -110,13 +117,23 @@ const Profile = () => {
               className="w-full mt-4 p-2 border rounded-lg"
               onChange={(e) => setNewPassword(e.target.value)}
             />
-            <button onClick={handleChangePassword}>Update Password</button>
-            <button
-              className="close-modal"
-              onClick={() => setShowChangePasswordModal(false)}
-            >
-              Cancel
-            </button>
+            <div className="flex justify-between mt-4">
+              <button
+                className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600"
+                onClick={handleChangePassword}
+              >
+                Update Password
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600"
+                onClick={() => setShowChangePasswordModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+            {successMessage && (
+              <p className="text-green-500 mt-2">{successMessage}</p>
+            )}
           </div>
         </div>
       )}
