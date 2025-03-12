@@ -20,7 +20,7 @@ const Input: React.FC<InputProps> = ({ label, type, value, onChange, placeholder
         onChange={onChange}
         placeholder={placeholder}
         required={required}
-        className={`font-primaryRegular justify-center w-100 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#FFAF20] ${className}`}
+        className={`font-primaryRegular justify-center w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#FFAF20] ${className}`}
       />
     </div>
   );
