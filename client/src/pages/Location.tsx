@@ -98,7 +98,7 @@ const Location = () => {
         nextPage="/languages"
         validateForm={validateForm}
       >
-        {errorMessage && <div className="error">{errorMessage}</div>}
+        {errorMessage && <div className="text-red-500 font-primaryMedium flex items-center justify-center">{errorMessage}</div>}
         <div  className="flex justify-center">
           <form id='formId' className='w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 my-10 px-4 sm:px-0' ref={formRef} onSubmit={handleSubmit}>
             <Input 

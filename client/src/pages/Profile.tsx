@@ -81,7 +81,7 @@ const Profile = () => {
           <p className="text-gray-600">Your hosting experience starts here.</p>
 
           {/* "Start Hosting" Button */}
-          <button className="mt-4 px-6 py-3 default-color text-white font-bold rounded-lg shadow-md color-hover text-lg"
+          <button className="mt-4 px-6 py-3 bg-[#FFAF20] text-white font-bold rounded-lg shadow-md hover:bg-[#e68a00] text-lg"
             onClick={() => navigate('/profile-information')}
           >
             Start Hosting

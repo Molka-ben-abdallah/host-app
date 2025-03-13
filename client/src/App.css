@@ -6,12 +6,7 @@
 .App {
   @apply text-center bg-gray-100 min-h-screen flex justify-center items-center font-sans;
 }
-.form{
-  @apply w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 my-10 px-4 sm:px-0;
-}
-.error{
-  @apply text-red-500 font-primaryMedium flex items-center justify-center;
-}
+
 .card {
   @apply bg-white p-8 md:p-10 w-full max-w-sm md:max-w-md rounded-xl shadow-lg flex flex-col items-center;
 }
@@ -84,3 +79,9 @@ input {
   @apply w-full bg-red-500 text-white p-3 rounded-lg mt-2 hover:bg-red-600;
 }
 
+.form{
+  @apply  w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 mx-auto my-10 px-4 sm:px-0;
+}
+.error{
+  @apply text-red-500 font-primaryMedium flex items-center justify-center;
+}
