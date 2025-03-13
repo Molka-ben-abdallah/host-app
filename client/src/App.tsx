@@ -19,17 +19,11 @@ import AuthPage from "./pages/AuthPage";
 
 function App() {
   const { currentUser } = useAuth(); // Get the current user from the auth context
-
   return (
     <Router>
       <Routes>
         {/* Redirect to /profile if the user is already logged in */}
-        <Route
-          path="/"
-          element={
-            currentUser ? <Navigate to="/profile" replace /> : <AuthPage />
-          }
-        />
+        <Route path="/" element={<AuthPage />} />
         {/* Protected Routes */}
         <Route
           path="/profile"

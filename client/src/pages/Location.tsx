@@ -17,7 +17,7 @@ const Location = () => {
 
     if (!userId) {
       console.error("User ID is not available.");
-      return; // Prevent API call if no userId
+      return;
     }
   }, []); // Empty dependency array ensures it runs only once when the component mounts
 
@@ -74,45 +74,47 @@ const Location = () => {
         tip="It’s important that guests can see your face. No company logos, favorite pets, blank images, etc. We can’t accept photos that don’t show the real you."
         nextPage="/languages"
       >
-        <form
-          id="formId"
-          className="form gap-4"
-          ref={formRef}
-          onSubmit={handleSubmit}
-        >
-          <Input
-            label="Your country"
-            type="text"
-            value={country}
-            onChange={(e) => handleChange(e, setCountry)}
-            placeholder=""
-            required={true}
-          />
-          <Input
-            label="Your city name"
-            type="text"
-            value={city}
-            onChange={(e) => handleChange(e, setCity)}
-            placeholder=""
-            required={true}
-          />
-          <Input
-            label="How many years have you been living in it ?"
-            type="number"
-            value={localYears}
-            onChange={(e) => handleChange(e, setLocalYears)}
-            placeholder=""
-            required={true}
-          />
-          <Input
-            label="Address"
-            type="text"
-            value={address}
-            onChange={(e) => handleChange(e, setAddress)}
-            placeholder=""
-            required={true}
-          />
-        </form>
+        <div className="flex justify-center">
+          <form
+            id="formId"
+            className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 my-10 px-4 sm:px-0 gap-5"
+            ref={formRef}
+            onSubmit={handleSubmit}
+          >
+            <Input
+              label="Your country"
+              type="text"
+              value={country}
+              onChange={(e) => handleChange(e, setCountry)}
+              placeholder="Enter your country"
+              required={true}
+            />
+            <Input
+              label="Your city name"
+              type="text"
+              value={city}
+              onChange={(e) => handleChange(e, setCity)}
+              placeholder="Enter your city"
+              required={true}
+            />
+            <Input
+              label="How many years have you been living in it?"
+              type="number"
+              value={localYears}
+              onChange={(e) => handleChange(e, setLocalYears)}
+              placeholder="Enter number of years"
+              required={true}
+            />
+            <Input
+              label="Address"
+              type="text"
+              value={address}
+              onChange={(e) => handleChange(e, setAddress)}
+              placeholder="Enter your address"
+              required={true}
+            />
+          </form>
+        </div>
       </MainLayout>
     </div>
   );

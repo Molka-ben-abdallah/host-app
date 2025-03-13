@@ -79,9 +79,9 @@ input {
   @apply w-full bg-red-500 text-white p-3 rounded-lg mt-2 hover:bg-red-600;
 }
 
-.form{
-  @apply  w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 mx-auto my-10 px-4 sm:px-0;
+.form {
+  @apply w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 mx-auto my-10 px-4 sm:px-0;
 }
-.error{
+.error {
   @apply bg-red-100 w-fit max-w-4xl p-4 text-red-700 rounded-lg mb-4 font-primaryMedium flex items-center justify-center;
 }

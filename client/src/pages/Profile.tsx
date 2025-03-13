@@ -11,7 +11,9 @@ const Profile = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const { currentUser } = useAuth();
 
-  // Redirect if not logged in
+ 
+
+
   useEffect(() => {
     if (!currentUser) {
       console.log("user logged out");
