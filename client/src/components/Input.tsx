@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 type InputProps = {
   label?: string;
@@ -10,22 +10,10 @@ type InputProps = {
   className?: string;
 };
 
-const Input: React.FC<InputProps> = ({
-  label,
-  type,
-  value,
-  onChange,
-  placeholder,
-  required,
-  className,
-}) => {
+const Input: React.FC<InputProps> = ({ label, type, value, onChange, placeholder, required, className }) => {
   return (
-    <div className=" px-8">
-      {label && (
-        <label className="block text-gray-700 font-primaryRegular">
-          {label}
-        </label>
-      )}
+    <div className="my-2 px-8">
+      {label && <label className="pt-2 block text-gray-700 font-primaryRegular">{label}</label>}
       <input
         type={type}
         value={value}

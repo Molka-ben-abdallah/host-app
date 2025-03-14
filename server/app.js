@@ -24,6 +24,8 @@ app.use(express.json());
 const authRoutes = require("./routes/authRoutes");
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use('/api', profileRoutes);
+const uploadRoutes = require("./routes/upload");
+app.use("/api", uploadRoutes);
 
 // Use routes
 //port

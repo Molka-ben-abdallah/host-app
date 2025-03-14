@@ -15,6 +15,8 @@ import Passions from "./pages/Passions";
 import Languages from "./pages/Languages";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthPage from "./pages/AuthPage";
+import Overview from "./pages/Overview";
+
 
 function App() {
   const { currentUser } = useAuth();
@@ -84,6 +86,14 @@ function App() {
         />
 
         {/* Landing Page (Could be a public page) */}
+        <Route
+          path="/overview"
+          element={
+            <ProtectedRoute>
+              <Overview />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/landing" element={<Landing />} />
       </Routes>
     </Router>
