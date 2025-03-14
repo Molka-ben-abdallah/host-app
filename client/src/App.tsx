@@ -16,6 +16,7 @@ import Passions from "./pages/Passions";
 import Languages from "./pages/Languages";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthPage from "./pages/AuthPage";
+import Overview from "./pages/Overview";
 
 function App() {
   const { currentUser } = useAuth(); // Get the current user from the auth context
@@ -76,6 +77,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Passions />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/overview"
+          element={
+            <ProtectedRoute>
+              <Overview />
             </ProtectedRoute>
           }
         />

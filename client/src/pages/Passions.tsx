@@ -82,7 +82,7 @@ const Passions = () => {
         <MainLayout
         title="Passion"
         tip="What makes you uniquely qualified to host experiences? Tell guests why you’re passionate and knowledgeable about the subject matter. Keep in mind: Hosting is about person-to-person connection, so make sure this section focuses on you"
-        nextPage="/profile-information"
+        nextPage="/overview"
       >
         <div className='flex justify-center'>
         <form className="w-full max-w-4xl grid grid-cols-1 my-5 px-4 sm:px-0"

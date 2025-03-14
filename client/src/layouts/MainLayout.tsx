@@ -7,7 +7,7 @@ import Button from "../components/Button";
 interface MainLayoutProps {
   children: ReactNode;
   title: string;
-  tip: string;
+  tip?: string;
   nextPage: string;
   validateForm?: () => boolean;
 }
@@ -50,7 +50,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title, tip, nextPage,
       <Sidebar/>
 
       <div className="flex flex-col flex-1 p-4">
-        <Tips title={title} text={tip} />
+      {tip && <Tips title={title} text={tip} />}
         <main >{children}</main>
         
         <div className="mt-auto self-end">
