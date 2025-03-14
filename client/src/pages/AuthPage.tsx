@@ -304,7 +304,7 @@ const AuthPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#FFBC20] text-black p-3 rounded-lg hover:bg-[#FFA500] disabled:bg-[#FFD773] transition-colors font-semibold"
+            className="w-full bg-[#FFBC20] text-white p-3 rounded-lg hover:bg-[#FFA500] disabled:bg-[#FFD773] transition-colors font-semibold"
           >
             {loading ? "Processing..." : isSignUp ? "Sign Up" : "Sign In"}
           </button>

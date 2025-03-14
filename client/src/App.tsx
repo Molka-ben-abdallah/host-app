@@ -1,4 +1,3 @@
-// App.tsx
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -6,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { useAuth } from "./context/AuthContext"; // Import useAuth
+import { useAuth } from "./context/AuthContext";
 import Profile from "./pages/Profile";
 import ProfileInfo from "./pages/ProfileInfo";
 import ProfilePhoto from "./pages/ProfilePhoto";
@@ -18,12 +17,22 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthPage from "./pages/AuthPage";
 
 function App() {
-  const { currentUser } = useAuth(); // Get the current user from the auth context
+  const { currentUser } = useAuth();
+
   return (
     <Router>
       <Routes>
-        {/* Redirect to /profile if the user is already logged in */}
-        <Route path="/" element={<AuthPage />} />
+        <Route
+          path="/"
+          element={
+            currentUser && currentUser.emailVerified ? (
+              <Navigate to="/profile" />
+            ) : (
+              <AuthPage />
+            )
+          }
+        />
+
         {/* Protected Routes */}
         <Route
           path="/profile"
@@ -73,6 +82,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Landing Page (Could be a public page) */}
         <Route path="/landing" element={<Landing />} />
       </Routes>
     </Router>

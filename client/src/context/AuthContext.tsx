@@ -4,8 +4,8 @@ import { onAuthStateChanged, User } from "firebase/auth";
 
 // Define the shape of the context
 interface AuthContextType {
-  currentUser: User | null; // The currently logged-in user
-  loading: boolean; // Whether the app is still loading the auth state
+  currentUser: User | null;
+  loading: boolean;
 }
 
 // Create the context with default values
