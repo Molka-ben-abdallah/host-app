@@ -1,22 +1,26 @@
-/node_modules
-/.pnp
-.pnp.js
-/.env
-/server/config/firebaseAccountKey.json
-# testing
-/coverage
+# Ignore node_modules (dependencies)
+node_modules/
 
-# production
-/build
+# Ignore Firebase private key (VERY IMPORTANT ⚠️)
+server/config/firebaseAccountKey.json
 
-# misc
-.DS_Store
+# Ignore environment variables
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
+# Ignore build and production files
+build/
+.pnp/
+.pnp.js
+
+# Ignore testing files
+coverage/
+
+# Ignore system and log files
+.DS_Store
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.env

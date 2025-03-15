@@ -17,7 +17,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthPage from "./pages/AuthPage";
 import Overview from "./pages/Overview";
 
-
 function App() {
   const { currentUser } = useAuth();
 
